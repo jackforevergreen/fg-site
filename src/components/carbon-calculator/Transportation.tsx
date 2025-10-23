@@ -111,8 +111,8 @@ const Transportation = ({
       className="max-w-4xl mx-auto pt-8"
     >
       {/* Page Header */}
-      <motion.div variants={fadeUp} className="text-center mb-10">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 mb-2 mt-2 shadow-lg">
+      <motion.div variants={fadeUp} className="text-center mb-5">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 mb-2 mt-4 shadow-lg">
           <Car className="h-8 w-8 text-white" />
         </div>
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
@@ -124,8 +124,8 @@ const Transportation = ({
       </motion.div>
 
       <motion.div variants={fadeUp}>
-        <Card className="shadow-xl border-2 border-blue-100">
-          <CardContent className="space-y-6 pt-6">
+        <Card className="shadow-md border-2 border-blue-300">
+          <CardContent className="space-y-6">
           <QuestionSlider
             question="In the last year, how many long round-trip flights have you been on? (more than 10 hours round trip) ✈️"
             value={surveyData.longFlights || 0}
@@ -210,7 +210,7 @@ const Transportation = ({
 
           <div className="border-t pt-6 mt-6">
             <h3 className="text-2xl font-bold text-center mb-4">Your Transportation Breakdown:</h3>
-            <div className="space-y-3 bg-gradient-to-br from-blue-50 to-blue-100/50 p-6 rounded-lg border border-blue-200">
+            <div className="space-y-3 bg-gradient-to-br from-blue-50 to-blue-100/50 p-6 rounded-lg border border-blue-300">
               <div className="flex justify-between text-base">
                 <span>Flight Emissions:</span>
                 <span className="font-semibold">{surveyEmissions.flightEmissions?.toFixed(2)}</span>

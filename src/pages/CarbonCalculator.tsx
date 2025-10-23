@@ -106,6 +106,11 @@ const CarbonCalculator = () => {
     monthlyEmissions: 0,
   });
 
+  // Scroll to top when step changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [routerLocation.search]);
+
   // Load existing data if user is logged in
   useEffect(() => {
     const loadUserData = async () => {

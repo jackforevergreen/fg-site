@@ -64,15 +64,15 @@ const PreSurvey = ({ surveyData, setSurveyData, selectedLocation, setSelectedLoc
           Welcome to <span className="text-primary">Forevergreen</span>
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Calculate your carbon footprint and discover how you can make a positive impact on our planet
+          Calculate your carbon footprint and discover how you can reduce your impact on our planet
         </p>
       </motion.div>
 
       <motion.div variants={fadeUp}>
-        <Card className="shadow-xl border-2 border-green-100">
-          <CardHeader className="text-center bg-gradient-to-r from-green-50 to-blue-50 rounded-t-lg">
-            <CardTitle className="text-2xl font-bold text-gray-900">
-              Let's Get Started 🌱
+        <Card className="shadow-md border-2 border-gray-200">
+          <CardHeader className="text-center bg-gradient-to-br from-yellow-300 via-green-600 to-blue-300 rounded-t-lg">
+            <CardTitle className="text-2xl font-bold text-white">
+               Ready to Calculate Your Impact?
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-8 pt-8">
@@ -100,7 +100,7 @@ const PreSurvey = ({ surveyData, setSurveyData, selectedLocation, setSelectedLoc
               </motion.div>
             </motion.div>
 
-            <motion.div variants={fadeUp} className="space-y-4 pt-4">
+            <motion.div variants={fadeUp} className="space-y-4">
               <h3 className="text-2xl font-bold text-center text-gray-900">Select Your Country 🌍</h3>
               <Select
                 value={surveyData.country}

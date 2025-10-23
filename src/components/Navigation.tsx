@@ -90,18 +90,17 @@ const Navigation = () => {
             })}
           </div>
 
-          {/* Desktop CTA */}
+          {/* Desktop Profile/Login Button */}
           {user ? (
             <Button
-              variant="outline"
               size="lg"
-              className="hidden lg:flex text-lg gap-2 border-2 hover:border-primary hover:shadow-md transition-all"
+              className="hidden lg:flex text-lg text-white gap-2 border-0 shadow-lg hover:shadow-xl transition-all bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600"
               onClick={() => navigate("/profile")}
             >
-              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-sm">
-                <User className="h-4 w-4 text-white" />
+              <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center shadow-md">
+                <User className="h-4 w-4 text-green-600" />
               </div>
-              <span className="font-semibold">Profile</span>
+              <span className="font-bold">Profile</span>
             </Button>
           ) : (
             <Button
@@ -128,10 +127,10 @@ const Navigation = () => {
         {/* Mobile slide-down panel */}
         <div
           className={`lg:hidden overflow-hidden transition-[max-height,opacity] duration-300 ${
-            open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+            open ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          <div className="py-2 border-t border-border">
+          <div className="py-3 border-t border-border bg-gray-50/50">
             {navigationItems.map((item, i) => {
               const isActive = location.pathname === item.href ||
                 (item.href.startsWith('/carbon-calculator') && location.pathname.startsWith('/carbon-calculator'));
@@ -140,12 +139,14 @@ const Navigation = () => {
                   key={i}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className={`block px-2 py-3 text-base font-medium rounded-md transition-all duration-200 ${
-                    isActive ? "text-primary" : "text-foreground"
-                  } hover:bg-accent/30 hover:scale-105 hover:text-primary`}
+                  className={`block mx-2 mb-1 px-4 py-3 text-base font-bold rounded-lg transition-all duration-200 ${
+                    isActive
+                      ? "text-white bg-primary shadow-md"
+                      : "text-foreground bg-white hover:bg-primary/10 hover:text-primary"
+                  } border border-gray-200 hover:border-primary hover:shadow-sm`}
                   whileHover={{
-                    scale: 1.02,
-                    x: 4,
+                    scale: 1.01,
+                    x: 2,
                     transition: { duration: 0.15 }
                   }}
                   whileTap={{
@@ -158,25 +159,24 @@ const Navigation = () => {
               );
             })}
 
-            <div className="px-2 pt-2 pb-4">
+            <div className="px-2 pt-3 pb-4">
               {user ? (
                 <Button
-                  variant="outline"
-                  className="w-full gap-2 border-2 h-12 font-semibold"
+                  className="w-full gap-2 h-12 font-bold text-white bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 shadow-md hover:shadow-lg transition-all border-0"
                   onClick={() => {
                     setOpen(false);
                     navigate("/profile");
                   }}
                 >
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-sm">
-                    <User className="h-4 w-4 text-white" />
+                  <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center shadow-md">
+                    <User className="h-4 w-4 text-green-600" />
                   </div>
                   Profile
                 </Button>
               ) : (
                 <Button
                   variant="hero"
-                  className="w-full h-12 font-semibold text-base"
+                  className="w-full h-12 font-bold text-base shadow-md hover:shadow-lg transition-all"
                   onClick={() => {
                     setOpen(false);
                     setLoginModalOpen(true);

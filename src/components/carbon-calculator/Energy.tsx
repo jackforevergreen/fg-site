@@ -115,8 +115,8 @@ const Energy = ({
       className="max-w-4xl mx-auto pt-8"
     >
       {/* Page Header */}
-      <motion.div variants={fadeUp} className="text-center mb-10">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 mb-2 mt-2 shadow-lg">
+      <motion.div variants={fadeUp} className="text-center mb-5">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 mb-2 mt-4 shadow-lg">
           <Zap className="h-8 w-8 text-white" />
         </div>
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
@@ -128,8 +128,8 @@ const Energy = ({
       </motion.div>
 
       <motion.div variants={fadeUp}>
-        <Card className="shadow-xl border-2 border-yellow-100">
-          <CardContent className="space-y-6 pt-6">
+        <Card className="shadow-md border-2 border-yellow-400">
+          <CardContent className="space-y-6">
           <NumberInput
             question="How much was your electric bill last month? ⚡"
             value={surveyData.electricBill || "0"}
@@ -183,7 +183,7 @@ const Energy = ({
 
           <div className="border-t pt-6 mt-6">
             <h3 className="text-2xl font-bold text-center mb-4">Your Energy Breakdown:</h3>
-            <div className="space-y-3 bg-gradient-to-br from-yellow-50 to-yellow-100/50 p-6 rounded-lg border border-yellow-200">
+            <div className="space-y-3 bg-yellow-50 p-6 rounded-lg border border-yellow-400">
               <div className="flex justify-between text-base">
                 <span>Electric Emissions:</span>
                 <span className="font-semibold">{surveyEmissions.electricEmissions?.toFixed(2)}</span>
@@ -205,7 +205,7 @@ const Energy = ({
                   ).toFixed(2)}
                 </span>
               </div>
-              <div className="flex justify-between text-lg font-bold border-t border-yellow-300 pt-3 mt-3">
+              <div className="flex justify-between text-lg font-bold border-t border-yellow-400 pt-3 mt-3">
                 <span>Total:</span>
                 <span>{surveyEmissions.totalEmissions?.toFixed(2)} tons of CO₂ per year</span>
               </div>
