@@ -1,18 +1,115 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { motion } from "framer-motion";
-import { ArrowLeft, ShoppingCart, Leaf, Clock, Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
+// Shop page - Carbon credit marketplace
+
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ArrowLeft, ShoppingCart, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ProductGrid } from '@/components/shop/ProductGrid';
+import { SubscriptionTierCard } from '@/components/shop/SubscriptionTierCard';
+import { CartDrawer } from '@/components/cart/CartDrawer';
+import { useProducts, useSubscriptionTiers } from '@/hooks/useProducts';
+import { useCart, useAddToCart, useCartCount } from '@/hooks/useCart';
+import { useAuth } from '@/hooks/useAuth';
+import { Product, PriceType, ProductType, ProjectType } from '@/types/product';
+import { SubscriptionTier } from '@/types/subscription';
+import { toast } from 'sonner';
 
 const Shop = () => {
+  const { user, isAuthenticated } = useAuth();
+  const { data: products = [], isLoading: productsLoading } = useProducts();
+  const { data: cartItems = [] } = useCart();
+  const addToCartMutation = useAddToCart();
+  const cartCount = useCartCount();
+
+  // Get monthly emissions from sessionStorage (from carbon calculator)
+  const [monthlyEmissions, setMonthlyEmissions] = useState<number | undefined>();
+
+  useEffect(() => {
+    const stored = sessionStorage.getItem('monthlyEmissions');
+    if (stored) {
+      setMonthlyEmissions(parseFloat(stored));
+    }
+  }, []);
+
+  const { data: subscriptionTiers = [], isLoading: tiersLoading } = useSubscriptionTiers(monthlyEmissions);
+
+  // Get cart product IDs for "In Cart" check
+  const cartProductIds = cartItems.map((item) => item.productId);
+
+  const handleAddToCart = async (product: Product, priceId: string) => {
+    if (!isAuthenticated) {
+      toast.error('Please sign in to add items to cart');
+      return;
+    }
+
+    const price = product.prices?.find((p) => p.id === priceId);
+    if (!price) {
+      toast.error('Price not found');
+      return;
+    }
+
+    try {
+      await addToCartMutation.mutateAsync({
+        productId: product.id,
+        priceId: price.id,
+        name: product.name,
+        productType: product.metadata.product_type,
+        projectType: product.metadata.project_type,
+        quantity: 1,
+        unitAmount: price.unit_amount,
+        type: price.type,
+        recurring: price.recurring,
+      });
+
+      toast.success(`${product.name} added to cart!`);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast.error('Failed to add item to cart');
+    }
+  };
+
+  const handleSubscribe = async (tier: SubscriptionTier) => {
+    if (!isAuthenticated) {
+      toast.error('Please sign in to subscribe');
+      return;
+    }
+
+    if (!tier.price_id) {
+      toast.error('This subscription tier is not available yet');
+      return;
+    }
+
+    // Find the product with this price
+    const subscriptionProduct = products.find((p) =>
+      p.prices?.some((price) => price.id === tier.price_id)
+    );
+
+    if (!subscriptionProduct) {
+      toast.error('Subscription product not found');
+      return;
+    }
+
+    await handleAddToCart(subscriptionProduct, tier.price_id);
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Header with back button */}
+      {/* Header with back button and cart */}
       <div className="container mx-auto px-4 pt-8">
-        <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="h-4 w-4" />
-          Back to Home
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Home
+          </Link>
+
+          {/* Cart Drawer */}
+          {isAuthenticated && <CartDrawer />}
+        </div>
       </div>
 
       {/* Main content */}
@@ -21,119 +118,113 @@ const Shop = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="max-w-4xl mx-auto text-center"
+          className="max-w-7xl mx-auto"
         >
-          {/* Coming Soon Badge */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-8"
-          >
-            <Sparkles className="h-4 w-4" />
-            Coming Soon
-          </motion.div>
+          {/* Hero Section */}
+          <div className="text-center mb-12">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6"
+            >
+              <Sparkles className="h-4 w-4" />
+              Now Live!
+            </motion.div>
 
-          {/* Main heading */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-4xl md:text-6xl font-bold mb-6 text-foreground"
-          >
-            Carbon Credits{" "}
-            <span className="text-primary">Shop</span>
-          </motion.h1>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-4xl md:text-6xl font-bold mb-6"
+            >
+              Carbon Credits <span className="text-primary">Shop</span>
+            </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed"
-          >
-            Offset your carbon footprint with verified carbon credits.
-            Our web shop is launching soon with seamless purchasing and instant delivery.
-          </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto"
+            >
+              Offset your carbon footprint with verified carbon credits. Choose one-time purchases or monthly subscriptions.
+            </motion.p>
+          </div>
 
-          {/* Feature cards */}
+          {/* Products and Subscriptions Tabs */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="grid md:grid-cols-3 gap-6 mb-12"
           >
-            <Card className="p-6 text-center">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Leaf className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="font-semibold mb-2">Verified Credits</h3>
-              <p className="text-sm text-muted-foreground">
-                All credits are verified and certified by leading standards
-              </p>
-            </Card>
+            <Tabs defaultValue="products" className="w-full">
+              <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
+                <TabsTrigger value="products">Carbon Credits</TabsTrigger>
+                <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
+              </TabsList>
 
-            <Card className="p-6 text-center">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <ShoppingCart className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="font-semibold mb-2">Easy Purchase</h3>
-              <p className="text-sm text-muted-foreground">
-                Simple checkout process with instant credit delivery
-              </p>
-            </Card>
+              {/* Products Tab */}
+              <TabsContent value="products">
+                <ProductGrid
+                  products={products}
+                  onAddToCart={handleAddToCart}
+                  cartItems={cartProductIds}
+                  loading={productsLoading}
+                />
+              </TabsContent>
 
-            <Card className="p-6 text-center">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Clock className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="font-semibold mb-2">Real-time Tracking</h3>
-              <p className="text-sm text-muted-foreground">
-                Track your offset progress and environmental impact
-              </p>
-            </Card>
+              {/* Subscriptions Tab */}
+              <TabsContent value="subscriptions">
+                {monthlyEmissions && (
+                  <div className="mb-6 p-4 bg-primary/10 rounded-lg text-center">
+                    <p className="text-sm text-primary font-medium">
+                      Based on your carbon footprint of {monthlyEmissions.toFixed(2)} tons/month, we recommend:
+                    </p>
+                  </div>
+                )}
+
+                {tiersLoading ? (
+                  <div className="text-center py-12">
+                    <p className="text-muted-foreground">Loading subscription tiers...</p>
+                  </div>
+                ) : subscriptionTiers.length === 0 ? (
+                  <div className="text-center py-12">
+                    <p className="text-muted-foreground">
+                      Subscription tiers are being configured. Please check back soon.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {subscriptionTiers.map((tier) => (
+                      <SubscriptionTierCard
+                        key={tier.id}
+                        tier={tier}
+                        onSubscribe={handleSubscribe}
+                        loading={addToCartMutation.isPending}
+                      />
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
           </motion.div>
 
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-          >
-            <Button size="lg" className="text-lg px-8 py-6" asChild>
-              <a
-                href="https://apps.apple.com/us/app/forevergreen-app/id6578432563"
-                target="_blank"
-                rel="noopener noreferrer"
-                data-analytics-event="app-download"
-                data-analytics-source="shop-placeholder"
-              >
-                Download App to Shop Now
-              </a>
-            </Button>
-            <Button variant="outline" size="lg" className="text-lg px-8 py-6" asChild>
-              <Link to="/">
-                Return to Home
-              </Link>
-            </Button>
-          </motion.div>
-
-          {/* Progress indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="mt-16 p-6 bg-muted/50 rounded-lg"
-          >
-            <h3 className="font-semibold mb-2">Development Progress</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              Web shop is currently in development as part of Phase 2 of our roadmap
-            </p>
-            <div className="w-full bg-muted rounded-full h-2">
-              <div className="bg-primary h-2 rounded-full" style={{ width: "25%" }}></div>
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">Phase 1.1 Complete • Phase 2 In Progress</p>
-          </motion.div>
+          {/* Sign-in prompt for non-authenticated users */}
+          {!isAuthenticated && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              className="mt-12 p-6 bg-muted/50 rounded-lg text-center"
+            >
+              <p className="text-muted-foreground mb-4">
+                Sign in to add products to your cart and complete your purchase.
+              </p>
+              <Button asChild>
+                <Link to="/profile">Sign In</Link>
+              </Button>
+            </motion.div>
+          )}
         </motion.div>
       </div>
     </div>

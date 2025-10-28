@@ -1,295 +1,484 @@
-# Forevergreen Website Development Analysis & Plan
+# Development Plan: Carbon Credit Shop Implementation
 
-## Current State Assessment
+## Current Status: Phase 2 - In Progress
 
-### **Technology Stack Analysis**
-**Current Website (fg-website):**
-- ✅ **React 18.3.1** with **TypeScript** - Excellent foundation
-- ✅ **Vite** - Fast development and build tools
-- ✅ **Tailwind CSS** - Modern utility-first CSS framework
-- ✅ **shadcn/ui** - High-quality component library
-- ✅ **Framer Motion** - Professional animation library
-- ✅ **React Router DOM** - Proper routing setup
-- ✅ **React Query** - Data fetching and state management
-- ✅ **Comprehensive UI Components** - All essential shadcn/ui components available
+This document tracks the implementation of the carbon credit shop for the Forevergreen website.
 
-**React Native App (fg-react-app):**
-- Firebase backend (Auth, Firestore, Functions, Storage)
-- Stripe payment integration
-- Expo Router for navigation
-- React Native Paper for UI components
+## Project Overview
 
-### **Current Landing Page Structure**
-The existing landing page includes:
-- Navigation with placeholder links
-- Hero section with call-to-action buttons
-- Community section
-- App showcase
-- YouTube promo
-- Carbon offset information
-- Newsletter signup
-- Footer
+We are porting the carbon credit shop functionality from the React Native mobile app to the web application. The implementation reuses existing Firebase Cloud Functions and integrates Stripe Checkout for payment processing.
 
-### **Key Strengths of Current Setup**
-1. **Modern Tech Stack**: The website uses industry-standard, performant technologies
-2. **Component Library**: shadcn/ui provides professional, accessible components
-3. **Design System**: Well-structured CSS variables and theming system
-4. **Responsive Design**: Tailwind CSS ensures mobile-first responsive design
-5. **Performance**: Vite and React 18 provide excellent performance
-6. **TypeScript**: Type safety throughout the application
+## Architecture Decisions
 
-### **No Major Refactoring Needed**
-The current technology choices are excellent and future-proof. No architectural changes required.
+### Backend
+- **Reuse existing Firebase Cloud Functions** from mobile app
+- Functions already support `client: "web"` parameter
+- No backend modifications required
 
----
+### Payment Processing
+- **Stripe Checkout (Hosted)** - Redirects to Stripe's hosted checkout page
+- Easier to implement, handles all payment UI
+- PCI compliant out of the box
+- Mobile-friendly
 
-## Project Requirements Analysis
+### State Management
+- **React Query** for server state (products, cart, subscriptions)
+- Optimistic updates for cart operations
+- Automatic caching and refetching
 
-### **Core Pages Needed**
-1. **Landing Page** ✅ (Exists, needs refinement)
-2. **Blog Page** ❌ (New requirement)
-3. **Shop/Credit Purchase Page** ❌ (New requirement)
+### UI Framework
+- **shadcn/ui components** for consistency with existing design
+- **Tailwind CSS** for styling
+- **Framer Motion** for animations
 
-### **Key Functionalities Required**
-1. **SEO Optimization** - For blog content migration
-2. **Web-based Checkout** - Credit purchases linking to app profiles
-3. **Blog System** - Markdown-based blog hosting
-4. **Dynamic Content** - Real-time subscriber/purchase counters (future)
+### Product Types (Initial Launch)
+1. **One-time carbon credit purchases** - Single purchases (plant a tree, flight offset, etc.)
+2. **Monthly carbon credit subscriptions** - Recurring based on carbon footprint
+
+### Subscription Management
+- Users can view subscription status
+- Users can cancel subscriptions
+- Keep it simple - no upgrade/downgrade in v1
 
 ---
 
-## Detailed Development Plan
+## Implementation Phases
 
-### **Phase 1: Foundation & Blog System (Week 1-2)**
+### Phase 1: Foundation & Infrastructure ✅
 
-#### **1.1 Enhanced Landing Page** <-- Currently Here
-- **Improve existing Hero section**
-  - Update call-to-action buttons with real functionality
-  - Add dynamic elements preparation (subscriber counters placeholder)
-- **Refine existing sections**
-  - Community section optimization
-  - App showcase enhancement
-  - Better YouTube integration
+#### 1.1 Dependencies
+```bash
+npm install @stripe/stripe-js
+```
 
-#### **1.2 Blog System Implementation**
-- **Create blog infrastructure:**
-  ```
-  /src/pages/Blog.tsx           // Main blog listing page
-  /src/pages/BlogPost.tsx       // Individual blog post page
-  /src/components/BlogCard.tsx  // Blog post card component
-  /src/lib/markdown.ts          // Markdown processing utilities
-  /src/content/blog/            // Markdown blog posts directory
-  ```
+#### 1.2 TypeScript Types
+**Files to create:**
+- `src/types/product.ts`
+  - Product interface
+  - Price interface
+  - CartItem interface
+  - ProductType enum
 
-- **Blog Features:**
-  - Markdown file processing with frontmatter
-  - SEO-optimized blog post pages
-  - Tag/category system
-  - Search functionality
-  - Responsive blog layout
-  - Social sharing buttons
+- `src/types/subscription.ts`
+  - Subscription interface
+  - SubscriptionStatus enum
+  - BillingInterval type
 
-#### **1.3 SEO Infrastructure**
-- **React Helmet implementation** for dynamic meta tags
-- **Sitemap generation** for blog posts
-- **Structured data markup** for blog posts
-- **Open Graph tags** for social sharing
+#### 1.3 Service Layer
+**Files to create:**
+- `src/lib/services/productService.ts`
+  - `fetchCarbonCreditProducts()` - Get all active products
+  - `fetchSpecificProduct(productId)` - Get single product with pricing
+  - `fetchSubscriptionTiers(emissions?)` - Get subscription options
 
-### **Phase 2: E-commerce Integration (Week 2-3)**
+- `src/lib/services/cartService.ts`
+  - `getCart(userId)` - Fetch cart from Firestore
+  - `addToCart(userId, item)` - Add item with optimistic update
+  - `removeFromCart(userId, itemId)` - Remove item
+  - `updateQuantity(userId, itemId, quantity)` - Update quantity
+  - `clearCart(userId)` - Clear cart after purchase
+  - `subscribeToCart(userId, callback)` - Real-time cart listener
 
-#### **2.1 Shopping/Credit Purchase Page**
-- **Reuse React Native commerce logic:**
-  - Adapt carbon credit components from `/client/app/(commerce)/`
-  - Port Stripe integration to web environment
-  - Create web-compatible payment flows
+- `src/lib/services/checkoutService.ts`
+  - `createCheckoutSession(userId, items, successUrl, cancelUrl)` - Create Stripe session
+  - `pollCheckoutStatus(userId, sessionId)` - Poll for completion
 
-- **Components to create:**
-  ```
-  /src/pages/Shop.tsx                    // Main shop page
-  /src/pages/CarbonCredits.tsx          // Credit purchase page
-  /src/components/shop/ProductCard.tsx   // Product display
-  /src/components/shop/Cart.tsx          // Shopping cart
-  /src/components/shop/Checkout.tsx      // Checkout flow
-  /src/lib/stripe-web.ts                // Web Stripe integration
-  /src/lib/firebase-web.ts              // Firebase web SDK
-  ```
+- `src/lib/services/subscriptionService.ts`
+  - `getSubscriptionStatus(userId)` - Fetch user's subscription
+  - `cancelSubscription(userId, subscriptionId)` - Cancel subscription
+  - `getSubscriptionHistory(userId)` - Get past subscriptions
 
-#### **2.2 Payment Integration**
-- **Stripe Web SDK setup**
-- **Firebase Web SDK integration**
-- **Cart state management**
-- **User authentication flow**
-- **Profile linking with mobile app**
-
-### **Phase 3: Advanced Features (Week 3-4)**
-
-#### **3.1 Dynamic Elements**
-- **Real-time counters** (subscribers, purchases)
-- **Live data fetching** from Firebase
-- **Performance optimization** for real-time updates
-
-#### **3.2 Content Management**
-- **Blog management system** (if needed beyond markdown files)
-- **Image optimization** and CDN integration
-- **Performance monitoring** setup
+#### 1.4 Stripe Initialization
+**File to create:**
+- `src/lib/stripe.ts`
+  - Initialize Stripe with publishable key
+  - Export `loadStripe()` instance
 
 ---
 
-## Reusability Assessment: React Native → Web
+### Phase 2: Custom React Query Hooks 🔄
 
-### **Highly Reusable Components**
-1. **Payment Logic** - Stripe integration patterns
-2. **Product Display** - Carbon credit showcase components
-3. **Cart Management** - Shopping cart state logic
-4. **Authentication Flows** - Firebase auth patterns
-5. **Data Structures** - TypeScript interfaces and types
+#### Files to create:
+- `src/hooks/useProducts.ts`
+  - `useProducts()` - Query all products with caching
+  - `useProduct(productId)` - Query single product
+  - `useSubscriptionTiers(emissions?)` - Query subscription options
 
-### **Components Requiring Adaptation**
-1. **UI Components** - Convert React Native Paper → shadcn/ui
-2. **Navigation** - Expo Router → React Router DOM
-3. **Storage** - AsyncStorage → localStorage/sessionStorage
-4. **Image Handling** - expo-image → regular img/next/Image
-5. **Platform-specific Payment** - Apple/Google Pay → Web payments
+- `src/hooks/useCart.ts`
+  - `useCart()` - Get cart with real-time updates
+  - `useAddToCart()` - Mutation with optimistic update
+  - `useRemoveFromCart()` - Mutation with optimistic update
+  - `useUpdateQuantity()` - Mutation with optimistic update
+  - `useClearCart()` - Mutation
 
-### **Recommended Approach**
-1. **Extract business logic** from React Native components
-2. **Create web-specific UI** using existing shadcn/ui components
-3. **Maintain data structures** and API calls
-4. **Share TypeScript types** between projects
+- `src/hooks/useCheckout.ts`
+  - `useCreateCheckout()` - Mutation to create session
+  - `useCheckoutStatus(sessionId)` - Poll checkout status
 
----
-
-## Critical Questions for PM
-
-### **1. Blog Content Migration**
-- **How many blog posts** need to be migrated?
-- **Do you have content in exportable format** (WordPress export, etc.)?
-- **Preferred timeline** for blog migration?
-- **SEO priority** - are there specific keywords/rankings to maintain?
-
-### **2. E-commerce Functionality**
-- **Which carbon credit products** should be available on web?
-- **Payment methods** required (credit card, PayPal, Apple Pay, Google Pay)?
-- **User account flow** - should users create web accounts or only app accounts?
-- **Order fulfillment** - how does web purchase link to app profile?
-
-### **3. Design & UX**
-- **Brand guidelines** - any specific design requirements?
-- **Mobile responsiveness** priority level?
-- **Accessibility requirements** (WCAG compliance level)?
-
-### **4. Technical Infrastructure**
-- **Hosting preferences** (current Netlify vs other)?
-- **Domain setup** timeline (transitioning from Wix)?
-- **Analytics requirements** (Google Analytics, custom tracking)?
-- **Performance requirements** (page load speed targets)?
-
-### **5. Content Strategy**
-- **Course integration** - how should Udemy course be promoted?
-- **Newsletter integration** - current email service provider?
-- **Social media integration** requirements?
+- `src/hooks/useSubscription.ts`
+  - `useSubscription()` - Query subscription status
+  - `useCancelSubscription()` - Mutation to cancel
 
 ---
 
-## Technical Implementation Notes
+### Phase 3: Core Components 📋
 
-### **Immediate Setup Requirements**
-1. **Environment Configuration**
-   - Development, staging, production environments
-   - API keys and configuration
-   - Firebase project setup for web
+#### 3.1 Product Components
+- `src/components/shop/ProductCard.tsx`
+  - Product image
+  - Name, description
+  - Price display
+  - "Add to Cart" button
+  - Project badges (afforestation, energy waste, etc.)
 
-2. **Deployment Pipeline**
-   - Automated deployments from git
-   - Preview deployments for testing
-   - Domain configuration
+- `src/components/shop/ProductGrid.tsx`
+  - Grid layout with filters
+  - Filter by product type (one-time vs subscription)
+  - Loading skeletons
+  - Empty state
 
-3. **Development Workflow**
-   - Component development standards
-   - Code review process
-   - Testing strategy
+- `src/components/shop/PriceDisplay.tsx`
+  - Format currency (cents to dollars)
+  - Handle one-time vs recurring pricing
+  - Display billing interval
 
-### **Performance Considerations**
-1. **Image Optimization** - WebP format, lazy loading
-2. **Code Splitting** - Route-based code splitting
-3. **SEO Optimization** - Meta tags, structured data
-4. **Caching Strategy** - Static assets and API responses
+- `src/components/shop/SubscriptionTierCard.tsx`
+  - Tier name (based on emissions)
+  - Monthly price
+  - CO2 offset amount
+  - "Subscribe" CTA
+  - Highlight recommended tier
+
+#### 3.2 Cart Components
+- `src/components/cart/CartDrawer.tsx`
+  - Sliding drawer (shadcn Sheet)
+  - Cart icon with badge count
+  - List of cart items
+  - Total price
+  - Checkout button
+
+- `src/components/cart/CartItem.tsx`
+  - Product name and type
+  - Price per item
+  - Quantity controls (+/- buttons)
+  - Remove button
+  - Subtotal
+
+- `src/components/cart/CartSummary.tsx`
+  - Subtotal
+  - Total CO2 offset
+  - Total price
+  - Checkout button
+
+- `src/components/cart/EmptyCart.tsx`
+  - Empty state illustration
+  - "Browse Products" CTA
+
+#### 3.3 Subscription Components
+- `src/components/subscription/SubscriptionCard.tsx`
+  - Subscription tier
+  - Monthly price
+  - Next billing date
+  - Status badge (active/canceled)
+  - Manage button
+
+- `src/components/subscription/CancelDialog.tsx`
+  - Confirmation dialog
+  - Warning about losing benefits
+  - Cancel/Keep subscription buttons
 
 ---
 
-## Recommended Timeline
+### Phase 4: Pages 📄
 
-### **Week 1**
-- ✅ Current analysis (completed)
-- 🔄 Enhanced landing page
-- 🔄 Blog system foundation
-- 🔄 SEO infrastructure
+#### 4.1 Shop Page (Update Existing)
+**File:** `src/pages/Shop.tsx`
+- Replace "Coming Soon" placeholder
+- Product grid with filters
+- Cart drawer trigger
+- Integration with carbon calculator results
+  - If user came from calculator, recommend subscription tier
+  - Persist emissions data in sessionStorage
 
-### **Week 2**
-- 🔄 Blog post migration
-- 🔄 Shop page creation
-- 🔄 Payment integration setup
+#### 4.2 Cart Page (New)
+**File:** `src/pages/Cart.tsx`
+- Full-page cart view
+- List all cart items
+- Quantity adjustment
+- Remove items
+- Order summary
+- Checkout button
+- "Continue Shopping" link
 
-### **Week 3**
-- 🔄 E-commerce functionality completion
-- 🔄 Testing and debugging
-- 🔄 Performance optimization
+#### 4.3 Checkout Success Page (New)
+**File:** `src/pages/CheckoutSuccess.tsx`
+- Order confirmation
+- Thank you message
+- Purchase details (items, total)
+- Environmental impact summary
+- "View Subscription" or "Return to Shop" buttons
 
-### **Week 4**
-- 🔄 Dynamic features
-- 🔄 Final polish and deployment
-- 🔄 Documentation and handover
+#### 4.4 Subscriptions Page (New)
+**File:** `src/pages/Subscriptions.tsx`
+- Active subscription card
+- Subscription details
+- Cancel subscription button
+- Purchase history (optional for v1)
+
+#### 4.5 Update Routes
+**File:** `src/App.tsx`
+```tsx
+<Route path="/shop" element={<Shop />} />
+<Route path="/cart" element={<Cart />} />
+<Route path="/checkout/success" element={<CheckoutSuccess />} />
+<Route path="/subscriptions" element={<Subscriptions />} />
+```
+
+---
+
+### Phase 5: Checkout Flow Integration 💳
+
+#### Checkout Process:
+1. User adds items to cart
+2. User clicks "Checkout"
+3. Frontend creates document at `users/{uid}/checkout_sessions/{sessionId}`
+   ```typescript
+   {
+     mode: 'payment' | 'subscription',
+     client: 'web',
+     line_items: [...],
+     success_url: `${window.location.origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+     cancel_url: `${window.location.origin}/cart`
+   }
+   ```
+4. Cloud Function intercepts and creates Stripe Checkout Session
+5. Frontend redirects to Stripe hosted checkout
+6. User completes payment
+7. Stripe redirects to success URL
+8. Success page polls session status
+9. Display confirmation
+
+#### Cloud Functions (No changes needed)
+- `createCheckoutSession` - Already handles `client: 'web'`
+- Webhook handlers - Process `checkout.session.completed` events
+- Creates purchase records in Firestore
+
+---
+
+### Phase 6: UX Enhancements 🎨
+
+#### 6.1 Loading States
+- Skeleton loaders for product grid
+- Loading spinner for cart operations
+- Checkout processing overlay
+
+#### 6.2 Error Handling
+- Toast notifications (sonner)
+- Retry logic for failed mutations
+- Network error detection
+- Friendly error messages
+
+#### 6.3 Responsive Design
+- Mobile-optimized cart drawer
+- Touch-friendly quantity controls
+- Grid breakpoints (1 col mobile, 2 col tablet, 3 col desktop)
+
+#### 6.4 Animations
+- Framer Motion for page transitions
+- Cart item add/remove animations
+- Success confetti (optional)
+
+#### 6.5 Integration with Carbon Calculator
+- Persist calculator results in sessionStorage
+- Pass emissions data to shop
+- Recommend subscription tier based on footprint
+- "Offset Now" CTA on Breakdown page (link to shop with tier pre-selected)
+
+---
+
+## File Structure
+
+```
+src/
+├── components/
+│   ├── shop/
+│   │   ├── ProductCard.tsx
+│   │   ├── ProductGrid.tsx
+│   │   ├── PriceDisplay.tsx
+│   │   └── SubscriptionTierCard.tsx
+│   ├── cart/
+│   │   ├── CartDrawer.tsx
+│   │   ├── CartItem.tsx
+│   │   ├── CartSummary.tsx
+│   │   └── EmptyCart.tsx
+│   └── subscription/
+│       ├── SubscriptionCard.tsx
+│       └── CancelDialog.tsx
+├── pages/
+│   ├── Shop.tsx (update existing)
+│   ├── Cart.tsx
+│   ├── CheckoutSuccess.tsx
+│   └── Subscriptions.tsx
+├── hooks/
+│   ├── useProducts.ts
+│   ├── useCart.ts
+│   ├── useCheckout.ts
+│   └── useSubscription.ts
+├── lib/
+│   ├── services/
+│   │   ├── productService.ts
+│   │   ├── cartService.ts
+│   │   ├── checkoutService.ts
+│   │   └── subscriptionService.ts
+│   ├── stripe.ts
+│   └── firebase.ts (existing)
+└── types/
+    ├── product.ts
+    └── subscription.ts
+```
+
+---
+
+## Data Models (Firestore)
+
+### Products Collection
+```
+products/
+  {productId}/
+    name: string
+    description: string
+    active: boolean
+    images: string[]
+    metadata: {
+      product_type: 'carbon_credit'
+      project_type: 'afforestation' | 'energy_waste' | 'flight_offset' | 'reforestation' | 'hydroelectric'
+      co2_offset_per_unit: number
+    }
+    prices/
+      {priceId}/
+        id: string
+        active: boolean
+        unit_amount: number (cents)
+        currency: string
+        type: 'one_time' | 'recurring'
+        recurring?: {
+          interval: 'month' | 'year'
+        }
+        metadata: {
+          product_type: 'carbon_credit'
+          project_name: string
+          total_offset: number
+        }
+```
+
+### Cart Collection
+```
+users/
+  {uid}/
+    cart/
+      {itemId}/
+        id: string
+        name: string
+        productType: string
+        quantity: number
+        priceId: string
+        unitAmount: number
+```
+
+### Checkout Sessions
+```
+users/
+  {uid}/
+    checkout_sessions/
+      {sessionId}/
+        client: 'web'
+        mode: 'payment' | 'subscription'
+        success_url: string
+        cancel_url: string
+        line_items: Array<{
+          price: string
+          quantity: number
+        }>
+        // Cloud Function adds:
+        sessionId: string (Stripe Checkout Session ID)
+        url: string (Redirect URL)
+```
+
+### Subscriptions Collection
+```
+users/
+  {uid}/
+    subscriptions/
+      {subscriptionId}/
+        id: string (Stripe subscription ID)
+        status: 'active' | 'canceled' | 'past_due'
+        current_period_end: timestamp
+        current_period_start: timestamp
+        items: Array<{
+          id: string
+          price: {
+            id: string
+            unit_amount: number
+            product: string
+          }
+        }>
+```
+
+---
+
+## Testing Checklist
+
+- [ ] Products load correctly from Firestore
+- [ ] Add to cart works with optimistic updates
+- [ ] Cart persists across page refreshes
+- [ ] Quantity updates work correctly
+- [ ] Remove from cart works
+- [ ] Checkout session creation succeeds
+- [ ] Redirect to Stripe Checkout works
+- [ ] Payment completion redirects to success page
+- [ ] Success page displays correct purchase details
+- [ ] Subscription creation works for recurring products
+- [ ] Subscription status displays correctly
+- [ ] Subscription cancellation works
+- [ ] Error states display correctly
+- [ ] Loading states appear during async operations
+- [ ] Mobile responsive design works
+- [ ] Cart drawer opens/closes smoothly
+- [ ] Integration with carbon calculator works
+
+---
+
+## Environment Variables
+
+Add to `.env` file:
+```
+VITE_STRIPE_PUBLISHABLE_KEY=pk_test_...
+```
 
 ---
 
 ## Next Steps
 
-1. **Clarify requirements** with PM responses
-2. **Set up development environment** with proper configuration
-3. **Begin Phase 1 implementation** with landing page improvements
-4. **Establish content migration workflow** for blog posts
-5. **Design e-commerce user flow** and technical architecture
-
-This plan provides a structured approach to building a modern, performant website that leverages the existing excellent technology choices while addressing all stated requirements.
-
----
-
-Comprehensive Forevergreen Website Analysis & Development Plan
-I've thoroughly analyzed your current website codebase, examined the React Native app for reusability patterns, and created a comprehensive development plan. Here are my key findings and recommendations:
-🎯 Current State Assessment
-Great News: Your current technology stack is excellent and requires no major refactoring. The combination of React 18, TypeScript, Vite, Tailwind CSS, and shadcn/ui represents a modern, performant foundation that's perfectly suited for your needs.
-Key Strengths:
-
-Modern React 18 with TypeScript for type safety
-Vite for lightning-fast development and builds
-Tailwind CSS with a well-structured design system
-Comprehensive shadcn/ui component library
-Framer Motion for professional animations
-React Router DOM already configured
-React Query for efficient data management
-
-📋 Development Plan Overview
-I've created a detailed 4-week development plan that addresses all your requirements:
-
-Week 1-2: Enhanced landing page + Blog system with SEO optimization
-Week 2-3: Shop/credit purchase page with Stripe integration
-Week 3-4: Dynamic features and final polish
-
-🔄 React Native → Web Reusability
-High Reusability (can adapt business logic):
-
-Payment integration patterns from your Stripe setup
-Product display logic for carbon credits
-Cart management state patterns
-Authentication flows with Firebase
-Data structures and TypeScript types
-
-Requires Adaptation (UI layer changes):
-
-React Native Paper components → shadcn/ui components
-Expo Router → React Router DOM
-Platform-specific APIs → Web APIs
+1. ✅ Install Stripe dependency
+2. Create types and service layer
+3. Build custom hooks
+4. Create components
+5. Update pages
+6. Test checkout flow
+7. Polish UX
+8. Deploy to production
 
 ---
 
-The existing codebase provides an excellent foundation, and the planned approach will efficiently deliver a clean, modern website that matches your mobile app's quality while serving your business objectives.
+## Notes
+
+- The mobile app's Cloud Functions are well-architected and support both mobile and web clients
+- No backend changes are needed - just need to set `client: 'web'` in checkout session creation
+- Stripe Checkout handles all payment UI, making implementation simpler
+- React Query provides excellent developer experience with caching and optimistic updates
+- shadcn/ui components ensure design consistency with existing website
+
+---
+
+**Last Updated:** 2025-10-23
+**Status:** Phase 1 Complete, Phase 2 In Progress
