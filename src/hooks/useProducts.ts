@@ -7,9 +7,11 @@ import {
   fetchSubscriptionTiers,
   fetchOneTimeProducts,
   fetchSubscriptionProducts,
+  fetchYearlyOffsetTiers,
 } from '@/lib/services/productService';
 import { Product } from '@/types/product';
 import { SubscriptionTier } from '@/types/subscription';
+import { YearlyOffsetTier } from '@/types/yearlyOffset';
 
 /**
  * Hook to fetch all carbon credit products
@@ -70,6 +72,21 @@ export function useSubscriptionProducts(): UseQueryResult<Product[], Error> {
   return useQuery({
     queryKey: ['products', 'subscription'],
     queryFn: fetchSubscriptionProducts,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+  });
+}
+
+/**
+ * Hook to fetch yearly offset tiers
+ * @param yearlyEmissions - Optional user's yearly CO2 emissions to determine recommended tier
+ */
+export function useYearlyOffsetTiers(
+  yearlyEmissions?: number
+): UseQueryResult<YearlyOffsetTier[], Error> {
+  return useQuery({
+    queryKey: ['yearly-offset-tiers', yearlyEmissions],
+    queryFn: () => fetchYearlyOffsetTiers(yearlyEmissions),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,
   });

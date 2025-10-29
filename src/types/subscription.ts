@@ -65,7 +65,7 @@ export const SUBSCRIPTION_TIERS: SubscriptionTier[] = [
   },
   {
     id: 'tier-2',
-    name: 'Average Footprint',
+    name: 'Moderate Footprint',
     emissions_min: 1,
     emissions_max: 2,
     price_id: '',

@@ -13,6 +13,7 @@ import {
 import { db } from '@/lib/firebase';
 import { Product, Price, PriceType, BillingInterval } from '@/types/product';
 import { SubscriptionTier, SUBSCRIPTION_TIERS } from '@/types/subscription';
+import { YearlyOffsetTier, YEARLY_OFFSET_TIERS } from '@/types/yearlyOffset';
 
 /**
  * Fetch all active carbon credit products from Firestore
@@ -117,6 +118,16 @@ export async function fetchSubscriptionTiers(
       )
     );
 
+    console.log('Subscription products found:', subscriptionProducts.length);
+    subscriptionProducts.forEach(product => {
+      console.log(`Product: ${product.name}`);
+      product.prices?.forEach(price => {
+        if (price.type === PriceType.RECURRING) {
+          console.log(`  - Price ID: ${price.id}, Amount: ${price.unit_amount}`);
+        }
+      });
+    });
+
     // Map to subscription tiers
     const tiers: SubscriptionTier[] = SUBSCRIPTION_TIERS.map((tier, index) => {
       // Try to find matching product based on price
@@ -130,12 +141,20 @@ export async function fetchSubscriptionTiers(
         return !!monthlyPrice;
       });
 
-      const priceId =
-        matchingProduct?.prices?.find(
-          (price) =>
-            price.type === PriceType.RECURRING &&
-            price.recurring?.interval === BillingInterval.MONTH
-        )?.id || '';
+      // Find the specific price that matches this tier's monthly_price
+      const matchingPrice = matchingProduct?.prices?.find(
+        (price) =>
+          price.type === PriceType.RECURRING &&
+          price.recurring?.interval === BillingInterval.MONTH &&
+          price.unit_amount === tier.monthly_price
+      );
+
+      const priceId = matchingPrice?.id || '';
+
+      console.log(`Tier: ${tier.name} ($${tier.monthly_price / 100}) -> Price ID: ${priceId || 'NOT FOUND'}`);
+      if (!priceId) {
+        console.warn(`No matching price found for tier ${tier.name} with monthly_price ${tier.monthly_price}`);
+      }
 
       // Determine if this tier is recommended
       const isRecommended =
@@ -188,5 +207,77 @@ export async function fetchSubscriptionProducts(): Promise<Product[]> {
   } catch (error) {
     console.error('Error fetching subscription products:', error);
     throw new Error('Failed to fetch subscription products');
+  }
+}
+
+/**
+ * Fetch yearly offset tier products based on user's yearly emissions
+ * @param yearlyEmissions - User's yearly CO2 emissions in tons (optional)
+ */
+export async function fetchYearlyOffsetTiers(
+  yearlyEmissions?: number
+): Promise<YearlyOffsetTier[]> {
+  try {
+    // Fetch all products
+    const products = await fetchCarbonCreditProducts();
+
+    // Filter for one-time purchase products only
+    const oneTimeProducts = products.filter((product) =>
+      product.prices?.some((price) => price.type === PriceType.ONE_TIME)
+    );
+
+    console.log('One-time products found:', oneTimeProducts.length);
+    oneTimeProducts.forEach(product => {
+      console.log(`Product: ${product.name}`);
+      product.prices?.forEach(price => {
+        if (price.type === PriceType.ONE_TIME) {
+          console.log(`  - Price ID: ${price.id}, Amount: ${price.unit_amount}`);
+        }
+      });
+    });
+
+    // Map to yearly offset tiers
+    const tiers: YearlyOffsetTier[] = YEARLY_OFFSET_TIERS.map((tier) => {
+      // Try to find matching product based on discounted price
+      const matchingProduct = oneTimeProducts.find((product) => {
+        const oneTimePrice = product.prices?.find(
+          (price) =>
+            price.type === PriceType.ONE_TIME &&
+            price.unit_amount === tier.discounted_price
+        );
+        return !!oneTimePrice;
+      });
+
+      // Find the specific price that matches this tier's discounted_price
+      const matchingPrice = matchingProduct?.prices?.find(
+        (price) =>
+          price.type === PriceType.ONE_TIME &&
+          price.unit_amount === tier.discounted_price
+      );
+
+      const priceId = matchingPrice?.id || '';
+
+      console.log(`Tier: ${tier.credits} credits ($${tier.discounted_price / 100}) -> Price ID: ${priceId || 'NOT FOUND'}`);
+      if (!priceId) {
+        console.warn(`No matching price found for tier with ${tier.credits} credits and discounted_price ${tier.discounted_price}`);
+      }
+
+      // Determine if this tier is recommended
+      const isRecommended =
+        yearlyEmissions !== undefined &&
+        yearlyEmissions <= tier.emissions_max &&
+        (tier.id === 'yearly-12' || yearlyEmissions > YEARLY_OFFSET_TIERS[YEARLY_OFFSET_TIERS.indexOf(tier) - 1]?.emissions_max || 0);
+
+      return {
+        ...tier,
+        price_id: priceId,
+        recommended: isRecommended,
+      };
+    });
+
+    return tiers;
+  } catch (error) {
+    console.error('Error fetching yearly offset tiers:', error);
+    throw new Error('Failed to fetch yearly offset tiers');
   }
 }

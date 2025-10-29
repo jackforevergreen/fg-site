@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 
 /**
  * Hook to create checkout session and redirect to Stripe
+ * Works for both authenticated and anonymous users
  */
 export function useCreateCheckout() {
   const { user } = useAuth();
@@ -28,22 +29,23 @@ export function useCreateCheckout() {
       successUrl?: string;
       cancelUrl?: string;
     }) => {
-      if (!user?.uid) throw new Error('User not authenticated');
-
       const origin = window.location.origin;
       const defaultSuccessUrl = `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`;
       const defaultCancelUrl = `${origin}/cart`;
 
+      // Use anonymous ID if user is not authenticated
+      const userId = user?.uid || `anonymous_${Date.now()}`;
+
       // Create checkout session document
       const sessionId = await createCheckoutSession(
-        user.uid,
+        userId,
         cartItems,
         successUrl || defaultSuccessUrl,
         cancelUrl || defaultCancelUrl
       );
 
       // Poll for Stripe session URL
-      const sessionData = await pollCheckoutStatus(user.uid, sessionId, 15, 1000);
+      const sessionData = await pollCheckoutStatus(userId, sessionId, 15, 1000);
 
       return sessionData;
     },

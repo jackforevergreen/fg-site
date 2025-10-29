@@ -444,7 +444,7 @@ const Breakdown = ({ surveyData, surveyEmissions }: BreakdownProps) => {
                   visible: { opacity: 1, y: 0 },
                 }}
               >
-                <div className="p-5 rounded-lg bg-gradient-to-br from-yellow-300 via-primary to-blue-400 shadow-sm">
+                <div className="p-5 rounded-lg bg-gradient-to-br from-yellow-400 via-green-500 to-blue-400 shadow-sm">
                   <div className="flex items-center justify-center gap-3 mb-2">
                     <Info className="h-8 w-8 text-white" />
                     <p className="text-2xl font-bold text-white">

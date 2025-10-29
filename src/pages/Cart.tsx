@@ -22,11 +22,6 @@ const Cart = () => {
   const checkoutMutation = useCreateCheckout();
 
   const handleCheckout = async () => {
-    if (!isAuthenticated) {
-      toast.error('Please sign in to checkout');
-      return;
-    }
-
     if (cartItems.length === 0) {
       toast.error('Your cart is empty');
       return;
@@ -74,18 +69,27 @@ const Cart = () => {
             </div>
           </div>
 
-          {/* Sign-in prompt */}
-          {!isAuthenticated ? (
-            <Card className="p-8 text-center">
-              <h3 className="text-lg font-semibold mb-2">Sign in to view your cart</h3>
-              <p className="text-muted-foreground mb-4">
-                You need to be signed in to add items to your cart and make purchases.
-              </p>
-              <Button asChild>
-                <Link to="/profile">Sign In</Link>
-              </Button>
+          {/* Optional Sign-in Banner for Anonymous Users */}
+          {!isAuthenticated && cartItems.length > 0 && (
+            <Card className="p-6 mb-6 bg-gradient-to-r from-blue-50 to-green-50 border border-green-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-1">
+                    Want to save your cart?
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Sign in to save your cart and track your purchases across devices.
+                  </p>
+                </div>
+                <Button asChild className="bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 font-bold">
+                  <Link to="/profile">Sign In</Link>
+                </Button>
+              </div>
             </Card>
-          ) : isLoading ? (
+          )}
+
+          {/* Cart Content */}
+          {isLoading ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground">Loading cart...</p>
             </div>

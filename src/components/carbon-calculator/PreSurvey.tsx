@@ -70,7 +70,7 @@ const PreSurvey = ({ surveyData, setSurveyData, selectedLocation, setSelectedLoc
 
       <motion.div variants={fadeUp}>
         <Card className="shadow-md border-2 border-gray-200">
-          <CardHeader className="text-center bg-gradient-to-br from-yellow-300 via-green-600 to-blue-300 rounded-t-lg">
+          <CardHeader className="text-center bg-gradient-to-br from-yellow-400 via-green-500 to-blue-400 rounded-t-lg">
             <CardTitle className="text-2xl font-bold text-white">
                Ready to Calculate Your Impact?
             </CardTitle>

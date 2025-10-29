@@ -70,6 +70,7 @@ const Profile = () => {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
+      window.scrollTo({ top: 0, behavior: 'instant' });
       navigate("/");
     } catch (error) {
       console.error("Error signing out:", error);

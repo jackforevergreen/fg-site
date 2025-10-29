@@ -194,7 +194,7 @@ const Navigation = () => {
       <LoginModal
         isOpen={loginModalOpen}
         onClose={() => setLoginModalOpen(false)}
-        onSuccess={() => navigate("/profile")}
+        onSuccess={() => window.location.reload()}
       />
     </nav>
   );
