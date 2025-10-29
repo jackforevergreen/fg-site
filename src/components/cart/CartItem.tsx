@@ -16,7 +16,7 @@ export function CartItem({ item, onIncrement, onDecrement, onRemove, loading = f
   const subtotal = item.unitAmount * item.quantity;
 
   return (
-    <div className="flex items-center gap-4 py-4 border-b last:border-0">
+    <div className="flex items-center gap-4 py-4 border-b last:border-0 hover:bg-gray-50/50 transition-colors px-2 rounded-lg">
       {/* Product Info */}
       <div className="flex-1 min-w-0">
         <h4 className="font-medium truncate">{item.name}</h4>
@@ -31,19 +31,19 @@ export function CartItem({ item, onIncrement, onDecrement, onRemove, loading = f
         <Button
           variant="outline"
           size="icon"
-          className="h-8 w-8"
+          className="h-8 w-8 rounded-full border-green-600 text-green-600 hover:bg-green-50 transition-all"
           onClick={() => onDecrement(item.id)}
           disabled={loading || item.quantity <= 1}
         >
           <Minus className="h-3 w-3" />
         </Button>
 
-        <span className="w-8 text-center font-medium">{item.quantity}</span>
+        <span className="w-8 text-center font-bold">{item.quantity}</span>
 
         <Button
           variant="outline"
           size="icon"
-          className="h-8 w-8"
+          className="h-8 w-8 rounded-full border-green-600 text-green-600 hover:bg-green-50 transition-all"
           onClick={() => onIncrement(item.id)}
           disabled={loading}
         >
@@ -52,7 +52,7 @@ export function CartItem({ item, onIncrement, onDecrement, onRemove, loading = f
       </div>
 
       {/* Subtotal */}
-      <div className="w-24 text-right font-semibold">
+      <div className="w-24 text-right font-bold">
         {formatPrice(subtotal)}
       </div>
 
@@ -60,7 +60,7 @@ export function CartItem({ item, onIncrement, onDecrement, onRemove, loading = f
       <Button
         variant="ghost"
         size="icon"
-        className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+        className="h-8 w-8 rounded-full text-red-600 hover:text-red-700 hover:bg-red-50 transition-all"
         onClick={() => onRemove(item.id)}
         disabled={loading}
       >

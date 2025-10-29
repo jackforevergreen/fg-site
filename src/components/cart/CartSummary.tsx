@@ -69,7 +69,7 @@ export function CartSummary({ items, onCheckout, loading = false }: CartSummaryP
         onClick={onCheckout}
         disabled={loading || items.length === 0}
         size="lg"
-        className="w-full"
+        className="w-full rounded-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-bold shadow-md hover:shadow-lg transition-all"
       >
         {loading ? 'Processing...' : 'Proceed to Checkout'}
       </Button>

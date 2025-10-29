@@ -9,8 +9,8 @@ interface PriceDisplayProps {
 
 export function PriceDisplay({ price, className = '' }: PriceDisplayProps) {
   return (
-    <div className={`font-semibold ${className}`}>
-      <span className="text-2xl">{getPriceDisplayText(price)}</span>
+    <div className={`font-bold ${className}`}>
+      <span className="text-3xl bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">{getPriceDisplayText(price)}</span>
     </div>
   );
 }

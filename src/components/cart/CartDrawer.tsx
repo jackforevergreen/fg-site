@@ -45,12 +45,14 @@ export function CartDrawer({ trigger }: CartDrawerProps) {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         {trigger || (
-          <Button variant="outline" size="icon" className="relative">
-            <ShoppingCart className="h-5 w-5" />
+          <Button
+            size="lg"
+            className="relative w-12 h-12 rounded-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white shadow-lg hover:shadow-xl transition-all border-0 p-0"
+          >
+            <ShoppingCart />
             {cartCount > 0 && (
               <Badge
-                variant="destructive"
-                className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
+                className="absolute -top-2 -right-2 h-7 w-7 flex items-center justify-center p-0 text-sm font-bold bg-red-500 text-white border-2 border-white shadow-md"
               >
                 {cartCount}
               </Badge>
@@ -75,7 +77,7 @@ export function CartDrawer({ trigger }: CartDrawerProps) {
           </div>
         ) : cartItems.length === 0 ? (
           <div className="flex-1 flex items-center justify-center">
-            <EmptyCart />
+            <EmptyCart onClose={() => setOpen(false)} />
           </div>
         ) : (
           <>

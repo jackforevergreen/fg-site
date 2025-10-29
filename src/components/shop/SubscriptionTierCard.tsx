@@ -5,21 +5,25 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { SubscriptionTier } from '@/types/subscription';
 import { formatPrice } from '@/types/product';
-import { Leaf, Star, Zap } from 'lucide-react';
+import { Leaf, Star, Zap, Check } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface SubscriptionTierCardProps {
   tier: SubscriptionTier;
   onSubscribe: (tier: SubscriptionTier) => void;
   isSubscribed?: boolean;
+  isRecommendedForUser?: boolean;
   loading?: boolean;
+  isAuthenticated?: boolean;
 }
 
 export function SubscriptionTierCard({
   tier,
   onSubscribe,
   isSubscribed = false,
+  isRecommendedForUser = false,
   loading = false,
+  isAuthenticated = false,
 }: SubscriptionTierCardProps) {
   const isRecommended = tier.recommended;
 
@@ -28,42 +32,59 @@ export function SubscriptionTierCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
+      whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
       className="h-full"
     >
-      <Card
-        className={`h-full flex flex-col relative ${
-          isRecommended ? 'border-primary border-2 shadow-lg' : ''
-        } ${isSubscribed ? 'bg-muted/50' : ''}`}
+      <motion.div
+        animate={isRecommendedForUser ? {
+          boxShadow: [
+            '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+            '0 0 25px 2px rgba(34, 197, 94, 0.4)',
+            '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+          ],
+        } : {}}
+        transition={{
+          duration: 2,
+          repeat: isRecommendedForUser ? Infinity : 0,
+          repeatType: 'reverse',
+        }}
       >
-        {/* Recommended Badge */}
-        {isRecommended && (
-          <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-            <Badge className="bg-primary text-primary-foreground px-3 py-1">
-              <Star className="h-3 w-3 mr-1 inline" />
-              Recommended
-            </Badge>
-          </div>
-        )}
+        <Card
+          className={`h-full flex flex-col relative shadow-md hover:shadow-xl transition-all duration-300 ${
+            isRecommendedForUser
+              ? 'ring-2 ring-green-600 border-green-600 bg-gradient-to-br from-green-50/50 to-white'
+              : ''
+          } ${isSubscribed ? 'bg-muted/50' : ''}`}
+        >
+          {/* Recommended for User Badge - Top Priority */}
+          {isRecommendedForUser && (
+            <div className="absolute -top-4 left-1/3 transform -translate-x-1/2 z-10">
+              <Badge className="bg-gradient-to-br from-green-600 to-green-400 text-white px-4 py-1.5 shadow-lg border-2 border-green-600">
+                <Star className="h-4 w-4 mr-1.5 inline" />
+                Recommended for {isAuthenticated ? 'Your' : 'the Average'} Footprint
+              </Badge>
+            </div>
+          )}
 
         <CardHeader className="text-center pb-4">
           {/* Icon */}
           <div
-            className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 ${
-              isRecommended
-                ? 'bg-primary/20'
-                : 'bg-muted'
+            className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 shadow-md ${
+              isRecommendedForUser
+                ? 'bg-gradient-to-br from-green-600 to-green-400'
+                : 'bg-green-600/10'
             }`}
           >
-            {isRecommended ? (
-              <Zap className={`h-6 w-6 ${isRecommended ? 'text-primary' : 'text-muted-foreground'}`} />
+            {isRecommendedForUser ? (
+              <Zap className="h-8 w-8 text-white" />
             ) : (
-              <Leaf className="h-6 w-6 text-muted-foreground" />
+              <Leaf className="h-8 w-8 text-green-600" />
             )}
           </div>
 
           <CardTitle className="text-xl">{tier.name}</CardTitle>
           <CardDescription>
-            For {tier.emissions_min}-{tier.emissions_max === Infinity ? '+' : tier.emissions_max} tons CO₂/month
+            For {tier.emissions_min}{tier.emissions_max === Infinity ? '+' : `-${tier.emissions_max}`} tons CO₂/month
           </CardDescription>
         </CardHeader>
 
@@ -79,15 +100,9 @@ export function SubscriptionTierCard({
           {/* Features */}
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-center gap-2">
-              <Leaf className="h-4 w-4 text-green-600" />
+              <Check className="h-4 w-4 text-green-600" />
               <span>Offsets {tier.co2_offset} ton{tier.co2_offset > 1 ? 's' : ''} CO₂/month</span>
             </div>
-            <p className="text-muted-foreground">
-              Verified carbon credits
-            </p>
-            <p className="text-muted-foreground">
-              Monthly impact reports
-            </p>
           </div>
         </CardContent>
 
@@ -95,14 +110,18 @@ export function SubscriptionTierCard({
           <Button
             onClick={() => onSubscribe(tier)}
             disabled={loading || isSubscribed || !tier.price_id}
-            className="w-full"
+            className={`text-lg w-full rounded-full font-bold shadow-md hover:shadow-lg transition-all ${
+              isRecommendedForUser
+                ? 'bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white border-0'
+                : 'bg-white border-2 border-green-600 text-green-600 hover:bg-green-50'
+            }`}
             size="lg"
-            variant={isRecommended ? 'default' : 'outline'}
           >
             {isSubscribed ? 'Current Plan' : tier.price_id ? 'Subscribe' : 'Coming Soon'}
           </Button>
         </CardFooter>
       </Card>
+      </motion.div>
     </motion.div>
   );
 }

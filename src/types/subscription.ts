@@ -56,7 +56,7 @@ export interface SubscriptionTier {
 export const SUBSCRIPTION_TIERS: SubscriptionTier[] = [
   {
     id: 'tier-1',
-    name: 'Light Footprint',
+    name: 'Small Footprint',
     emissions_min: 0,
     emissions_max: 1,
     price_id: '', // Will be populated from Firestore
@@ -65,7 +65,7 @@ export const SUBSCRIPTION_TIERS: SubscriptionTier[] = [
   },
   {
     id: 'tier-2',
-    name: 'Moderate Footprint',
+    name: 'Average Footprint',
     emissions_min: 1,
     emissions_max: 2,
     price_id: '',
@@ -74,7 +74,7 @@ export const SUBSCRIPTION_TIERS: SubscriptionTier[] = [
   },
   {
     id: 'tier-3',
-    name: 'Average Footprint',
+    name: 'Large Footprint',
     emissions_min: 2,
     emissions_max: 3,
     price_id: '',
@@ -83,7 +83,7 @@ export const SUBSCRIPTION_TIERS: SubscriptionTier[] = [
   },
   {
     id: 'tier-4',
-    name: 'High Footprint',
+    name: 'Very Large Footprint',
     emissions_min: 3,
     emissions_max: 4,
     price_id: '',
@@ -92,7 +92,7 @@ export const SUBSCRIPTION_TIERS: SubscriptionTier[] = [
   },
   {
     id: 'tier-5',
-    name: 'Very High Footprint',
+    name: 'Extreme Footprint',
     emissions_min: 4,
     emissions_max: Infinity,
     price_id: '',
