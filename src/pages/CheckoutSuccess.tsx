@@ -19,12 +19,22 @@ const CheckoutSuccess = () => {
 
   const { data: sessionData, isLoading } = useCheckoutSession(sessionId || undefined);
 
-  // Clear cart on successful purchase
+  // Clear cart on successful purchase (for both authenticated and anonymous users)
   useEffect(() => {
-    if (sessionData && user) {
-      clearCartMutation.mutate();
+    if (sessionData) {
+      if (user) {
+        // Authenticated user: clear Firestore cart
+        clearCartMutation.mutate();
+      } else {
+        // Anonymous user: clear localStorage cart
+        try {
+          localStorage.removeItem('anonymousCart');
+        } catch (error) {
+          console.error('Error clearing anonymous cart:', error);
+        }
+      }
     }
-  }, [sessionData, user]);
+  }, [sessionData, user, clearCartMutation]);
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">

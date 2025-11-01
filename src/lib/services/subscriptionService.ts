@@ -13,7 +13,8 @@ import {
   onSnapshot,
   Unsubscribe,
 } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { httpsCallable } from 'firebase/functions';
+import { db, functions } from '@/lib/firebase';
 import { Subscription, SubscriptionStatus } from '@/types/subscription';
 
 /**
@@ -68,45 +69,34 @@ export async function getAllSubscriptions(userId: string): Promise<Subscription[
 
 /**
  * Cancel a subscription
- * This creates a cancellation request that the Cloud Function will process
+ * Calls the Cloud Function to immediately cancel in Stripe
  */
 export async function cancelSubscription(
   userId: string,
   subscriptionId: string
 ): Promise<void> {
   try {
-    const subscriptionRef = doc(db, `users/${userId}/subscriptions`, subscriptionId);
+    // Call the Cloud Function to cancel the subscription in Stripe
+    const cancelFn = httpsCallable(functions, 'cancelSubscription');
+    const result = await cancelFn({ subscriptionId });
 
-    // Update the subscription to mark it for cancellation
-    // The Cloud Function will handle the actual Stripe cancellation
-    await updateDoc(subscriptionRef, {
-      cancel_at_period_end: true,
-      cancellation_requested_at: new Date(),
-    });
-  } catch (error) {
+    console.log('Subscription canceled:', result.data);
+  } catch (error: any) {
     console.error('Error canceling subscription:', error);
-    throw new Error('Failed to cancel subscription');
+    const errorMessage = error?.message || 'Failed to cancel subscription';
+    throw new Error(errorMessage);
   }
 }
 
 /**
- * Reactivate a canceled subscription (before period ends)
+ * Reactivate a canceled subscription
+ * Note: Since cancellation is immediate, users must create a new subscription
  */
 export async function reactivateSubscription(
   userId: string,
   subscriptionId: string
 ): Promise<void> {
-  try {
-    const subscriptionRef = doc(db, `users/${userId}/subscriptions`, subscriptionId);
-
-    await updateDoc(subscriptionRef, {
-      cancel_at_period_end: false,
-      cancellation_requested_at: null,
-    });
-  } catch (error) {
-    console.error('Error reactivating subscription:', error);
-    throw new Error('Failed to reactivate subscription');
-  }
+  throw new Error('Canceled subscriptions cannot be reactivated. Please create a new subscription from the Shop page.');
 }
 
 /**

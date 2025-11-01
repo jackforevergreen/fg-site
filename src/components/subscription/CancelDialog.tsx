@@ -39,21 +39,21 @@ export function CancelDialog({
           </div>
           <AlertDialogDescription className="space-y-3 pt-2">
             <p>
-              Are you sure you want to cancel your carbon credit subscription? This will stop your monthly carbon offset contributions.
+              Are you sure you want to cancel your carbon credit subscription? This will immediately stop your monthly carbon offset contributions.
             </p>
 
             <div className="bg-muted p-3 rounded-lg text-sm">
               <p className="font-medium text-foreground mb-1">What happens next:</p>
               <ul className="space-y-1 text-muted-foreground">
-                <li>• You'll keep your benefits until {nextBillingDate || 'the end of your billing period'}</li>
+                <li>• Your subscription will be canceled immediately</li>
                 <li>• No future charges will be made</li>
-                <li>• You can reactivate anytime before {nextBillingDate || 'the period ends'}</li>
                 <li>• Your carbon offset history will be preserved</li>
+                <li>• You can create a new subscription anytime from the Shop page</li>
               </ul>
             </div>
 
-            <p className="text-sm">
-              You can always resubscribe later to continue offsetting your carbon footprint.
+            <p className="text-sm font-medium text-amber-600 dark:text-amber-500">
+              Note: This action cannot be undone. You'll need to create a new subscription to continue offsetting your carbon footprint.
             </p>
           </AlertDialogDescription>
         </AlertDialogHeader>

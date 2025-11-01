@@ -78,7 +78,7 @@ export function useCancelSubscription() {
         queryClient.invalidateQueries({ queryKey: ['subscription', user.uid] });
         queryClient.invalidateQueries({ queryKey: ['subscriptions', 'all', user.uid] });
       }
-      toast.success('Subscription will be canceled at the end of the billing period.');
+      toast.success('Subscription has been canceled successfully.');
     },
     onError: (error: Error) => {
       console.error('Cancel subscription error:', error);

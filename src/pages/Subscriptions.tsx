@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { SubscriptionCard } from '@/components/subscription/SubscriptionCard';
 import { CancelDialog } from '@/components/subscription/CancelDialog';
-import { useSubscription, useCancelSubscription, useReactivateSubscription } from '@/hooks/useSubscription';
+import { useSubscription, useCancelSubscription } from '@/hooks/useSubscription';
 import { useAuth } from '@/hooks/useAuth';
 import { formatBillingDate } from '@/types/subscription';
 
@@ -16,18 +16,12 @@ const Subscriptions = () => {
   const { user, isAuthenticated } = useAuth();
   const { data: subscription, isLoading } = useSubscription();
   const cancelMutation = useCancelSubscription();
-  const reactivateMutation = useReactivateSubscription();
 
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 
   const handleManageSubscription = () => {
-    if (subscription?.cancel_at_period_end) {
-      // If subscription is set to cancel, allow reactivation
-      handleReactivate();
-    } else {
-      // Otherwise, open cancel dialog
-      setCancelDialogOpen(true);
-    }
+    // Open cancel dialog
+    setCancelDialogOpen(true);
   };
 
   const handleCancelSubscription = async () => {
@@ -38,16 +32,6 @@ const Subscriptions = () => {
       setCancelDialogOpen(false);
     } catch (error) {
       console.error('Cancel subscription error:', error);
-    }
-  };
-
-  const handleReactivate = async () => {
-    if (!subscription) return;
-
-    try {
-      await reactivateMutation.mutateAsync(subscription.id);
-    } catch (error) {
-      console.error('Reactivate subscription error:', error);
     }
   };
 
@@ -106,28 +90,8 @@ const Subscriptions = () => {
               <SubscriptionCard
                 subscription={subscription}
                 onManage={handleManageSubscription}
-                loading={cancelMutation.isPending || reactivateMutation.isPending}
+                loading={cancelMutation.isPending}
               />
-
-              {/* Reactivate Button (if subscription is set to cancel) */}
-              {subscription.cancel_at_period_end && (
-                <Card className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-semibold mb-1">Want to continue?</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Reactivate your subscription to keep offsetting your carbon footprint.
-                      </p>
-                    </div>
-                    <Button
-                      onClick={handleReactivate}
-                      disabled={reactivateMutation.isPending}
-                    >
-                      Reactivate
-                    </Button>
-                  </div>
-                </Card>
-              )}
             </div>
           ) : (
             <Card className="p-8 text-center">
