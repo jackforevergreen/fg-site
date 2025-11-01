@@ -233,7 +233,7 @@ export function YouTubeProvider({ children }: { children: React.ReactNode }) {
     const videosValid = isLatestVideosCacheValid();
 
     if (statsValid && videosValid) {
-      console.log('Using valid cached YouTube data');
+      //console.log('Using valid cached YouTube data');
       return;
     }
 
@@ -251,10 +251,7 @@ export function YouTubeProvider({ children }: { children: React.ReactNode }) {
         payload: { channelStats, latestVideos },
       });
 
-      console.log('Fetched fresh YouTube data:', {
-        subscribers: formatNumber(channelStats.subscriberCount).formatted,
-        videos: latestVideos.length
-      });
+      //console.log('Fetched fresh YouTube data:', { subscribers: formatNumber(channelStats.subscriberCount).formatted, videos: latestVideos.length });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to fetch YouTube data';
       dispatch({ type: 'FETCH_ERROR', payload: errorMessage });
@@ -265,12 +262,12 @@ export function YouTubeProvider({ children }: { children: React.ReactNode }) {
       const cachedVideos = getCachedLatestVideos();
 
       if (cachedStats || cachedVideos) {
-        console.log('Falling back to cached YouTube data');
+        //console.log('Falling back to cached YouTube data');
         if (cachedStats) dispatch({ type: 'SET_CHANNEL_STATS', payload: cachedStats });
         if (cachedVideos) dispatch({ type: 'SET_LATEST_VIDEOS', payload: cachedVideos });
       } else {
         // Final fallback to static data
-        console.log('Using fallback YouTube data');
+        //console.log('Using fallback YouTube data');
         dispatch({
           type: 'FETCH_SUCCESS',
           payload: {

@@ -20,7 +20,7 @@ import { auth } from "@/lib/firebase";
 import { signOut, User, deleteUser, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
 import { fetchEmissionsData } from "@/api/emissions";
 import { EmissionsDocument } from "@/types/emissions";
-import { LogOut, User as UserIcon, Calendar, Leaf, Trash2, Edit2, Car, Utensils, Zap, TrendingDown } from "lucide-react";
+import { LogOut, User as UserIcon, Calendar, Leaf, Trash2, Edit2, Car, Utensils, Zap, TrendingDown, CreditCard } from "lucide-react";
 import { motion } from "framer-motion";
 
 const fadeUp = {
@@ -70,6 +70,7 @@ const Profile = () => {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
+      window.scrollTo({ top: 0, behavior: 'instant' });
       navigate("/");
     } catch (error) {
       console.error("Error signing out:", error);
@@ -78,6 +79,10 @@ const Profile = () => {
 
   const handleTakeCalculator = () => {
     navigate("/carbon-calculator");
+  };
+
+  const handleManageSubscriptions = () => {
+    navigate("/subscriptions");
   };
 
   const handleDeleteAccount = async () => {
@@ -304,6 +309,16 @@ const Profile = () => {
 
           {/* Action Buttons */}
           <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
+            <Button
+              onClick={handleManageSubscriptions}
+              variant="default"
+              size="lg"
+              className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white font-bold shadow-md hover:shadow-lg transition-all px-8 py-6 text-base"
+            >
+              <CreditCard className="mr-2 h-5 w-5" />
+              Manage Subscriptions
+            </Button>
+
             <Button
               onClick={handleSignOut}
               variant="outline"
