@@ -12,9 +12,9 @@ const navigationItems = [
   { name: "Home", href: "/" },
   { name: "Carbon Calculator", href: "/carbon-calculator" },
   { name: "Shop", href: "/shop" },
-  { name: "Course", href: "#" },
+  { name: "Course", href: "/courses" },
   { name: "Blog", href: "/blog" },
-  { name: "About", href: "#" },
+  { name: "About", href: "/about" },
 ];
 
 const Navigation = () => {
