@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import Navigation from "@/components/Navigation";
 
-const Blog = () => {
+const Courses = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -33,7 +33,7 @@ const Blog = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-4xl md:text-6xl font-bold mb-6 text-foreground"
           >
-            Forevergreen Blog
+            Forevergreen Courses
           </motion.h1>
 
           <motion.p
@@ -42,7 +42,7 @@ const Blog = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
           >
-            Discover insights about sustainability, climate action, and environmental conservation. Our blog platform is launching soon with expert articles and community stories.
+            Learn about environmental sustainability, climate science, and green living practices. Our comprehensive course platform is launching soon with expert-led content and interactive learning experiences.
           </motion.p>
         </motion.div>
       </div>
@@ -50,4 +50,4 @@ const Blog = () => {
   );
 };
 
-export default Blog;
+export default Courses;
