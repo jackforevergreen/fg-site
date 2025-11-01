@@ -1,5 +1,6 @@
 // Full cart page
 
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ShoppingBag } from 'lucide-react';
@@ -8,6 +9,7 @@ import { Card } from '@/components/ui/card';
 import { CartItem } from '@/components/cart/CartItem';
 import { CartSummary } from '@/components/cart/CartSummary';
 import { EmptyCart } from '@/components/cart/EmptyCart';
+import LoginModal from '@/components/auth/LoginModal';
 import { useCart, useIncrementQuantity, useDecrementQuantity, useRemoveFromCart } from '@/hooks/useCart';
 import { useCreateCheckout } from '@/hooks/useCheckout';
 import { useAuth } from '@/hooks/useAuth';
@@ -20,6 +22,7 @@ const Cart = () => {
   const decrementMutation = useDecrementQuantity();
   const removeMutation = useRemoveFromCart();
   const checkoutMutation = useCreateCheckout();
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   const handleCheckout = async () => {
     if (cartItems.length === 0) {
@@ -81,8 +84,11 @@ const Cart = () => {
                     Sign in to save your cart and track your purchases across devices.
                   </p>
                 </div>
-                <Button asChild className="bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 font-bold">
-                  <Link to="/profile">Sign In</Link>
+                <Button
+                  onClick={() => setLoginModalOpen(true)}
+                  className="bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 font-bold"
+                >
+                  Sign In
                 </Button>
               </div>
             </Card>
@@ -138,6 +144,13 @@ const Cart = () => {
           )}
         </motion.div>
       </div>
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+        onSuccess={() => window.location.reload()}
+      />
     </div>
   );
 };

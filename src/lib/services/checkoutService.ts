@@ -29,8 +29,8 @@ export async function createCheckoutSession(
   cancelUrl: string
 ): Promise<string> {
   try {
-    console.log('Creating checkout session for user:', userId);
-    console.log('Cart items:', cartItems);
+    //console.log('Creating checkout session for user:', userId);
+    //console.log('Cart items:', cartItems);
 
     // Determine if this is a subscription or one-time payment
     const hasSubscription = cartItems.some((item) => item.type === 'recurring');
@@ -59,9 +59,9 @@ export async function createCheckoutSession(
       createdAt: serverTimestamp(),
     };
 
-    console.log('Writing checkout session:', sessionData);
+    //console.log('Writing checkout session:', sessionData);
     await setDoc(checkoutSessionRef, sessionData);
-    console.log('Checkout session created successfully:', checkoutSessionId);
+    //console.log('Checkout session created successfully:', checkoutSessionId);
 
     // Return the session ID so the caller can poll for the URL
     return checkoutSessionId;
@@ -92,10 +92,10 @@ export async function pollCheckoutStatus(
       checkoutSessionRef,
       (snapshot) => {
         attempts++;
-        console.log(`Poll attempt ${attempts}/${maxAttempts}`);
+        //console.log(`Poll attempt ${attempts}/${maxAttempts}`);
 
         if (!snapshot.exists()) {
-          console.log('Checkout session document does not exist');
+          //console.log('Checkout session document does not exist');
           if (attempts >= maxAttempts) {
             unsubscribe();
             reject(new Error('Checkout session not found'));
@@ -104,11 +104,11 @@ export async function pollCheckoutStatus(
         }
 
         const data = snapshot.data();
-        console.log('Checkout session data:', data);
+        //console.log('Checkout session data:', data);
 
         // Check if Cloud Function has populated the session
         if (data.url && data.sessionId) {
-          console.log('Checkout session ready!', data);
+          //console.log('Checkout session ready!', data);
           unsubscribe();
           resolve({
             sessionId: data.sessionId,

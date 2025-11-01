@@ -59,7 +59,7 @@ export function useEmissionsData({
           // Use defaults if no data found
           setYearlyEmissions(defaultYearlyEmissions);
           setMonthlyEmissions(defaultMonthlyEmissions);
-          console.log('No emissions data found in database, using defaults');
+          //console.log('No emissions data found in database, using defaults');
         }
       } catch (err) {
         console.error('Error fetching emissions data:', err);

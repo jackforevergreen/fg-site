@@ -118,12 +118,12 @@ export async function fetchSubscriptionTiers(
       )
     );
 
-    console.log('Subscription products found:', subscriptionProducts.length);
+    //console.log('Subscription products found:', subscriptionProducts.length);
     subscriptionProducts.forEach(product => {
-      console.log(`Product: ${product.name}`);
+     //console.log(`Product: ${product.name}`);
       product.prices?.forEach(price => {
         if (price.type === PriceType.RECURRING) {
-          console.log(`  - Price ID: ${price.id}, Amount: ${price.unit_amount}`);
+          //console.log(`  - Price ID: ${price.id}, Amount: ${price.unit_amount}`);
         }
       });
     });
@@ -151,7 +151,7 @@ export async function fetchSubscriptionTiers(
 
       const priceId = matchingPrice?.id || '';
 
-      console.log(`Tier: ${tier.name} ($${tier.monthly_price / 100}) -> Price ID: ${priceId || 'NOT FOUND'}`);
+      //console.log(`Tier: ${tier.name} ($${tier.monthly_price / 100}) -> Price ID: ${priceId || 'NOT FOUND'}`);
       if (!priceId) {
         console.warn(`No matching price found for tier ${tier.name} with monthly_price ${tier.monthly_price}`);
       }
@@ -226,12 +226,12 @@ export async function fetchYearlyOffsetTiers(
       product.prices?.some((price) => price.type === PriceType.ONE_TIME)
     );
 
-    console.log('One-time products found:', oneTimeProducts.length);
+    //console.log('One-time products found:', oneTimeProducts.length);
     oneTimeProducts.forEach(product => {
-      console.log(`Product: ${product.name}`);
+      //console.log(`Product: ${product.name}`);
       product.prices?.forEach(price => {
         if (price.type === PriceType.ONE_TIME) {
-          console.log(`  - Price ID: ${price.id}, Amount: ${price.unit_amount}`);
+          //console.log(`  - Price ID: ${price.id}, Amount: ${price.unit_amount}`);
         }
       });
     });
@@ -257,7 +257,7 @@ export async function fetchYearlyOffsetTiers(
 
       const priceId = matchingPrice?.id || '';
 
-      console.log(`Tier: ${tier.credits} credits ($${tier.discounted_price / 100}) -> Price ID: ${priceId || 'NOT FOUND'}`);
+      //console.log(`Tier: ${tier.credits} credits ($${tier.discounted_price / 100}) -> Price ID: ${priceId || 'NOT FOUND'}`);
       if (!priceId) {
         console.warn(`No matching price found for tier with ${tier.credits} credits and discounted_price ${tier.discounted_price}`);
       }
@@ -266,7 +266,7 @@ export async function fetchYearlyOffsetTiers(
       const isRecommended =
         yearlyEmissions !== undefined &&
         yearlyEmissions <= tier.emissions_max &&
-        (tier.id === 'yearly-12' || yearlyEmissions > YEARLY_OFFSET_TIERS[YEARLY_OFFSET_TIERS.indexOf(tier) - 1]?.emissions_max || 0);
+        (tier.id === 'yearly-12' || yearlyEmissions > (YEARLY_OFFSET_TIERS[YEARLY_OFFSET_TIERS.indexOf(tier) - 1]?.emissions_max ?? Infinity));
 
       return {
         ...tier,

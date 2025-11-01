@@ -15,7 +15,7 @@ export const createUserProfile = async (userData: {
 
     if (userDoc.exists()) {
       // User already exists, don't update createdAt
-      console.log("User profile already exists:", userData.uid);
+      //console.log("User profile already exists:", userData.uid);
       return;
     }
 
@@ -32,7 +32,7 @@ export const createUserProfile = async (userData: {
     };
 
     await setDoc(userDocRef, userProfile);
-    console.log("User profile created successfully:", userData.uid);
+    //console.log("User profile created successfully:", userData.uid);
   } catch (error) {
     console.error("Error creating user profile:", error);
     throw error;

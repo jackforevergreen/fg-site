@@ -76,7 +76,7 @@ const Breakdown = ({ surveyData, surveyEmissions }: BreakdownProps) => {
           await saveCommunityEmissionsData(surveyEmissions.totalEmissions || 0);
 
           setDataSaved(true);
-          console.log("Data saved successfully!");
+          //console.log("Data saved successfully!");
         } catch (error) {
           console.error("Error saving data:", error);
         }
@@ -632,7 +632,7 @@ const Breakdown = ({ surveyData, surveyEmissions }: BreakdownProps) => {
             );
             setDataSaved(true);
             setIsLoggedIn(true);
-            console.log("Data saved after login!");
+            //console.log("Data saved after login!");
           } catch (error) {
             console.error("Error saving data after login:", error);
           }

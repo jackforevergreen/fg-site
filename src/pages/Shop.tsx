@@ -1,7 +1,7 @@
 // Shop page - Carbon credit marketplace
 
 import { useState, useRef, useMemo } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,6 +13,7 @@ import {
   AnimatedCartButtonHandle,
 } from "@/components/cart/AnimatedCartButton";
 import Navigation from "@/components/Navigation";
+import LoginModal from "@/components/auth/LoginModal";
 import { useProducts, useSubscriptionTiers, useYearlyOffsetTiers } from "@/hooks/useProducts";
 import { useAddToCart } from "@/hooks/useCart";
 import { useAuth } from "@/hooks/useAuth";
@@ -30,6 +31,7 @@ const Shop = () => {
   const [activeTab, setActiveTab] = useState<"one-time" | "subscription" | "yearly-offset">(
     "one-time"
   );
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
   const cartButtonRef = useRef<AnimatedCartButtonHandle>(null);
 
   // Fetch emissions data using shared hook
@@ -118,6 +120,18 @@ const Shop = () => {
   };
 
   const handleSubscribe = async (tier: SubscriptionTier) => {
+    // Require authentication for subscriptions
+    if (!isAuthenticated) {
+      toast.error("Please sign in to subscribe", {
+        description: "Subscriptions require an account to manage billing and renewals",
+        action: {
+          label: "Sign In",
+          onClick: () => setLoginModalOpen(true),
+        },
+      });
+      return;
+    }
+
     if (!tier.price_id) {
       toast.error("This subscription tier is not available yet");
       return;
@@ -411,13 +425,23 @@ const Shop = () => {
               <p className="text-muted-foreground mb-4">
                 Sign in to save your purchases, track your impact, and access exclusive features. Or continue as a guest!
               </p>
-              <Button asChild className="bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 font-bold">
-                <Link to="/profile">Sign In</Link>
+              <Button
+                onClick={() => setLoginModalOpen(true)}
+                className="bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 font-bold"
+              >
+                Sign In
               </Button>
             </motion.div>
           )}
         </motion.div>
       </div>
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+        onSuccess={() => window.location.reload()}
+      />
     </div>
   );
 };

@@ -189,6 +189,6 @@ export function isCacheApproachingExpiry(key: keyof YouTubeCacheData): boolean {
 // Development helper: Log cache status
 export function logCacheStatus(): void {
   if (import.meta.env.DEV) {
-    console.log('YouTube Cache Status:', getCacheStatus());
+    //('YouTube Cache Status:', getCacheStatus());
   }
 }
