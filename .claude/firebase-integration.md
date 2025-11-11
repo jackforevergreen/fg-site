@@ -113,8 +113,8 @@ npm run dev
 6. Visit `/profile` to see your data
 
 ## Firebase Console
-- Project ID: `fg-react-app`
-- Console: https://console.firebase.google.com/project/fg-react-app
+- Project ID: (configured via environment variables)
+- Console: https://console.firebase.google.com (access with your Firebase account)
 
 ## Security
 - Firestore security rules should be configured to:
