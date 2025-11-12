@@ -15,6 +15,7 @@ const navigationItems = [
   { name: "Course", href: "/courses" },
   { name: "Blog", href: "/blog" },
   { name: "About", href: "/about" },
+  { name: "Timeline", href: "/timeline" },
 ];
 
 const Navigation = () => {

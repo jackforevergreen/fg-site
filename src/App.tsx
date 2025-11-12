@@ -12,6 +12,7 @@ import Subscriptions from "./pages/Subscriptions";
 import Blog from "./pages/Blog";
 import Courses from "./pages/Courses";
 import About from "./pages/About";
+import Timeline from "./pages/Timeline";
 import CarbonCalculator from "./pages/CarbonCalculator";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/blog" element={<Blog />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/about" element={<About />} />
+            <Route path="/timeline" element={<Timeline />} />
             <Route path="/carbon-calculator" element={<CarbonCalculator />} />
             <Route path="/profile" element={<Profile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

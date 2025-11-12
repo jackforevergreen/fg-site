@@ -9,7 +9,7 @@ import { ShoppingBag } from 'lucide-react';
 
 interface ProductGridProps {
   products: Product[];
-  onAddToCart: (product: Product, priceId: string) => void;
+  onAddToCart: (product: Product, priceId: string, quantity: number) => void;
   cartItems?: string[]; // Array of product IDs in cart
   loading?: boolean;
 }
@@ -78,7 +78,6 @@ export function ProductGrid({ products, onAddToCart, cartItems = [], loading = f
                   key={product.id}
                   product={product}
                   onAddToCart={onAddToCart}
-                  isInCart={cartItems.includes(product.id)}
                 />
               ))}
             </div>
