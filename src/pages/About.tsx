@@ -1,12 +1,9 @@
 import Navigation from "@/components/Navigation";
 import { motion } from "framer-motion";
 import {
-  Calculator,
   Flower,
   Flower2,
   Leaf,
-  LeafIcon,
-  Lightbulb,
   Sprout,
   TreeDeciduous,
   TreePine,
@@ -103,7 +100,6 @@ const About = () => {
     },
   ];
 
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       <Navigation />
@@ -135,33 +131,33 @@ const About = () => {
           </div>
         </motion.div>
 
-<div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-  {features.map((feature, index) => (
-    <motion.div
-      key={feature.number}
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.2 + index * 0.15 }}
-      className="relative"
-    >
-      {/* Card */}
-      <div className="h-full p-8 rounded-2xl bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-950/30 dark:to-green-900/20 border-2 border-green-200 dark:border-green-800 hover:border-green-400 dark:hover:border-green-600 transition-all duration-300 hover:shadow-xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {features.map((feature, index) => (
+            <motion.div
+              key={feature.number}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 + index * 0.15 }}
+              className="relative"
+            >
+              {/* Card */}
+              <div className="h-full p-8 rounded-2xl bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-950/30 dark:to-green-900/20 border-2 border-green-200 dark:border-green-800 hover:border-green-400 dark:hover:border-green-600 transition-all duration-300 hover:shadow-xl">
+                {/* Number Circle (now replaces icon + title) */}
+                <div className="mb-6 w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg text-white text-2xl font-bold">
+                  {feature.number}
+                </div>
 
-        {/* Number Circle (now replaces icon + title) */}
-        <div className="mb-6 w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg text-white text-2xl font-bold">
-          {feature.number}
+                {/* Description */}
+                <p className="text-muted-foreground leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
         </div>
-
-        {/* Description */}
-        <p className="text-muted-foreground leading-relaxed">
-          {feature.description}
-        </p>
       </div>
-    </motion.div>
-  ))}
-</div>
 
-  {/* Timeline Section */}
+      {/* Timeline Section */}
       <div className="container mx-auto px-4 py-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
