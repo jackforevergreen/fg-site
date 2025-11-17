@@ -1,21 +1,20 @@
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { YouTubeProvider } from "@/lib/youtube/youtube-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { YouTubeProvider } from "@/lib/youtube/youtube-context";
-import Index from "./pages/Index";
-import Shop from "./pages/Shop";
+import About from "./pages/About";
+import Blog from "./pages/Blog";
+import CarbonCalculator from "./pages/CarbonCalculator";
 import Cart from "./pages/Cart";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
-import Subscriptions from "./pages/Subscriptions";
-import Blog from "./pages/Blog";
 import Courses from "./pages/Courses";
-import About from "./pages/About";
-import Timeline from "./pages/Timeline";
-import CarbonCalculator from "./pages/CarbonCalculator";
-import Profile from "./pages/Profile";
+import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
+import Shop from "./pages/Shop";
+import Subscriptions from "./pages/Subscriptions";
 
 const queryClient = new QueryClient();
 
@@ -35,7 +34,6 @@ const App = () => (
             <Route path="/blog" element={<Blog />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/about" element={<About />} />
-            <Route path="/timeline" element={<Timeline />} />
             <Route path="/carbon-calculator" element={<CarbonCalculator />} />
             <Route path="/profile" element={<Profile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
