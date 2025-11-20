@@ -32,7 +32,7 @@ const Footer = () => {
               <img
               src={FGLogo}
               alt="Forevergreen"
-              className="w-auto md:h-12 object-contain select-none"
+              className="h-8 md:h-12 w-auto object-contain select-none"
               draggable={false}
             />
                           <span className="text-lg md:text-xl font-bold text-foreground">

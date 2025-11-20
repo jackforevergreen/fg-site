@@ -10,7 +10,7 @@ import Business from "@/components/business";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Navigation />
       <Hero />
       <Community />

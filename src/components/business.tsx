@@ -65,7 +65,7 @@ export default function NetZeroPromo() {
         <motion.div
           {...fade}
           transition={{ duration: 0.65 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-x-20 gap-y-14 max-w-6xl mx-auto items-start justify-items-center text-center"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-x-20 md:gap-y-14 max-w-6xl mx-auto items-start justify-items-center text-center px-4"
         >
           <DocumentMockup image={pdf1} label="Offset Project Tearsheets" />
           <LaptopMockup image={excelSheet} label="Calculation Model (Excel)" />
@@ -105,7 +105,7 @@ function DocumentMockup({ image, label }: { image: string; label: string }) {
         <img
           src={image}
           alt={label}
-          className="max-h-[300px] w-auto object-contain mx-auto"
+          className="max-h-[200px] md:max-h-[300px] w-auto object-contain mx-auto"
         />
       </div>
       <p className="mt-3 text-center text-sm font-medium text-foreground">

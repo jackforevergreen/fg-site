@@ -280,22 +280,22 @@ const Shop = () => {
               onValueChange={(value) => setActiveTab(value as any)}
               className="w-full"
             >
-              <TabsList className="grid w-full max-w-4xl mx-auto grid-cols-3 h-12 bg-white/95 backdrop-blur-sm shadow-md">
+              <TabsList className="grid w-full max-w-4xl mx-auto grid-cols-3 h-auto min-h-12 bg-white/95 backdrop-blur-sm shadow-md">
                 <TabsTrigger
                   value="one-time"
-                  className="text-base font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all"
+                  className="text-xs sm:text-sm md:text-base font-semibold whitespace-normal py-2 px-1 sm:px-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all"
                 >
                   One-Time Purchase
                 </TabsTrigger>
                 <TabsTrigger
                   value="yearly-offset"
-                  className="text-base font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all"
+                  className="text-xs sm:text-sm md:text-base font-semibold whitespace-normal py-2 px-1 sm:px-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all"
                 >
                   Yearly Offset
                 </TabsTrigger>
                 <TabsTrigger
                   value="subscription"
-                  className="text-base font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all"
+                  className="text-xs sm:text-sm md:text-base font-semibold whitespace-normal py-2 px-1 sm:px-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all"
                 >
                   Monthly Subscription
                 </TabsTrigger>
