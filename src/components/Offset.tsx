@@ -140,7 +140,11 @@ export default function OffsetOptionsShowcase() {
               </div>
 
               <div className="mt-auto space-y-3">
-                <Button variant="primary-action" size="lg" className="w-full rounded-xl py-3 text-lg">
+                <Button
+                  variant="primary-action"
+                  size="lg"
+                  className="w-full rounded-xl py-3 text-lg"
+                >
                   Start Subscription
                 </Button>
                 <div className="h-5 flex items-center justify-center text-xs text-muted-foreground">
@@ -197,7 +201,11 @@ export default function OffsetOptionsShowcase() {
               </div>
 
               <div className="mt-auto space-y-3">
-                <Button variant="primary-action" size="lg" className="w-full rounded-xl py-3 text-lg">
+                <Button
+                  variant="primary-action"
+                  size="lg"
+                  className="w-full rounded-xl py-3 text-lg"
+                >
                   Offset Now
                 </Button>
                 <div className="h-5 flex items-center justify-center">
@@ -257,7 +265,12 @@ export default function OffsetOptionsShowcase() {
               </div>
 
               <div className="mt-auto space-y-3">
-                <Button variant="primary-action" size="lg" className="w-full rounded-xl py-3 text-lg">
+                <Button
+                  variant="primary-action"
+                  size="lg"
+                  className="w-full rounded-xl py-3 text-lg"
+                  onClick={() => navigate("/flights")}
+                >
                   Offset This Flight
                 </Button>
                 {/* Same fixed height as others */}

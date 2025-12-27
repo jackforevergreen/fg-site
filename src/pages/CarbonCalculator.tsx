@@ -1,17 +1,19 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation as useRouterLocation } from "react-router-dom";
+import { fetchEmissionsData } from "@/api/emissions";
 import Navigation from "@/components/Navigation";
-import PreSurvey from "@/components/carbon-calculator/PreSurvey";
-import Transportation from "@/components/carbon-calculator/Transportation";
-import Diet from "@/components/carbon-calculator/Diet";
-import Energy from "@/components/carbon-calculator/Energy";
 import Breakdown from "@/components/carbon-calculator/Breakdown";
 import CalculatorNav from "@/components/carbon-calculator/CalculatorNav";
+import Diet from "@/components/carbon-calculator/Diet";
+import Energy from "@/components/carbon-calculator/Energy";
+import PreSurvey from "@/components/carbon-calculator/PreSurvey";
+import Transportation from "@/components/carbon-calculator/Transportation";
+import { auth } from "@/lib/firebase";
 import locationData from "@/utils/constants/locations.json";
 import type { Location } from "@/utils/locationHelpers";
-import { auth } from "@/lib/firebase";
-import { fetchEmissionsData } from "@/api/emissions";
-import type { SurveyData as SurveyDataType, SurveyEmissions as SurveyEmissionsType } from "@/types/emissions";
+import { useEffect, useState } from "react";
+import {
+  useNavigate,
+  useLocation as useRouterLocation,
+} from "react-router-dom";
 
 export type SurveyData = {
   // Location
@@ -71,7 +73,9 @@ const CarbonCalculator = () => {
   const searchParams = new URLSearchParams(routerLocation.search);
   const currentStep = searchParams.get("step") || "pre-survey";
 
-  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(
+    null
+  );
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const [surveyData, setSurveyData] = useState<SurveyData>({
@@ -211,7 +215,15 @@ const CarbonCalculator = () => {
           />
         );
       default:
-        return <PreSurvey surveyData={surveyData} setSurveyData={setSurveyData} selectedLocation={selectedLocation} setSelectedLocation={setSelectedLocation} onNext={() => goToStep("transportation")} />;
+        return (
+          <PreSurvey
+            surveyData={surveyData}
+            setSurveyData={setSurveyData}
+            selectedLocation={selectedLocation}
+            setSelectedLocation={setSelectedLocation}
+            onNext={() => goToStep("transportation")}
+          />
+        );
     }
   };
 

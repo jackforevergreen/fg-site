@@ -1,21 +1,21 @@
 import FGLogo from "@/assets/logo.png";
+import LoginModal from "@/components/auth/LoginModal";
 import { Button } from "@/components/ui/button";
-import { Menu, X, User } from "lucide-react";
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { useLocation, useNavigate } from "react-router-dom";
 import { auth } from "@/lib/firebase";
 import { User as FirebaseUser } from "firebase/auth";
-import LoginModal from "@/components/auth/LoginModal";
+import { motion } from "framer-motion";
+import { Menu, User, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const navigationItems = [
   { name: "Home", href: "/" },
   { name: "Carbon Calculator", href: "/carbon-calculator" },
-  { name: "Shop", href: "/shop" },
+  { name: "Carbon Credits", href: "/carboncredits" },
   { name: "Course", href: "/courses" },
-  { name: "Blog", href: "/blog" },
+  { name: "Learn", href: "/learn" },
   { name: "About", href: "/about" },
-  { name: "Timeline", href: "/timeline" },
+  { name: "Projects", href: "/projects" },
 ];
 
 const Navigation = () => {
@@ -51,15 +51,23 @@ const Navigation = () => {
               draggable={false}
             />
             <span className="text-lg md:text-2xl font-bold text-foreground">
-              Forever<span className="text-lg md:text-2xl font-bold text-foreground" style={{ color: "#217E38" }}>green</span>
+              Forever
+              <span
+                className="text-lg md:text-2xl font-bold text-foreground"
+                style={{ color: "#217E38" }}
+              >
+                green
+              </span>
             </span>
           </a>
 
           {/* Desktop links */}
           <div className="hidden lg:flex items-center space-x-8">
             {navigationItems.map((item, i) => {
-              const isActive = location.pathname === item.href ||
-                (item.href.startsWith('/carbon-calculator') && location.pathname.startsWith('/carbon-calculator'));
+              const isActive =
+                location.pathname === item.href ||
+                (item.href.startsWith("/carbon-calculator") &&
+                  location.pathname.startsWith("/carbon-calculator"));
               return (
                 <motion.a
                   key={i}
@@ -71,17 +79,17 @@ const Navigation = () => {
                   }`}
                   whileHover={{
                     scale: 1.05,
-                    transition: { duration: 0.15, ease: "easeOut" }
+                    transition: { duration: 0.15, ease: "easeOut" },
                   }}
                   whileTap={{
                     scale: 0.95,
-                    transition: { duration: 0.1 }
+                    transition: { duration: 0.1 },
                   }}
                 >
                   <motion.span
                     whileHover={{
                       y: -1,
-                      transition: { duration: 0.15 }
+                      transition: { duration: 0.15 },
                     }}
                   >
                     {item.name}
@@ -133,8 +141,10 @@ const Navigation = () => {
         >
           <div className="py-3 border-t border-border bg-gray-50/50">
             {navigationItems.map((item, i) => {
-              const isActive = location.pathname === item.href ||
-                (item.href.startsWith('/carbon-calculator') && location.pathname.startsWith('/carbon-calculator'));
+              const isActive =
+                location.pathname === item.href ||
+                (item.href.startsWith("/carbon-calculator") &&
+                  location.pathname.startsWith("/carbon-calculator"));
               return (
                 <motion.a
                   key={i}
@@ -148,11 +158,11 @@ const Navigation = () => {
                   whileHover={{
                     scale: 1.01,
                     x: 2,
-                    transition: { duration: 0.15 }
+                    transition: { duration: 0.15 },
                   }}
                   whileTap={{
                     scale: 0.98,
-                    transition: { duration: 0.1 }
+                    transition: { duration: 0.1 },
                   }}
                 >
                   {item.name}

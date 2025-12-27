@@ -4,16 +4,19 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { YouTubeProvider } from "@/lib/youtube/youtube-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Methodology from "./components/Methodology";
 import About from "./pages/About";
-import Blog from "./pages/Blog";
+import Learn from "./pages/Blog";
 import CarbonCalculator from "./pages/CarbonCalculator";
 import Cart from "./pages/Cart";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
 import Courses from "./pages/Courses";
+import Flights from "./pages/Flights";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
-import Shop from "./pages/Shop";
+import Projects from "./pages/Projects";
+import CarbonCredis from "./pages/Shop";
 import Subscriptions from "./pages/Subscriptions";
 
 const queryClient = new QueryClient();
@@ -27,17 +30,20 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/shop" element={<Shop />} />
+            <Route path="/carboncredits" element={<CarbonCredis />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout/success" element={<CheckoutSuccess />} />
             <Route path="/subscriptions" element={<Subscriptions />} />
-            <Route path="/blog" element={<Blog />} />
+            <Route path="/learn" element={<Learn />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/about" element={<About />} />
             <Route path="/carbon-calculator" element={<CarbonCalculator />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/projects" element={<Projects />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
+            <Route path="/flights" element={<Flights />} />
+            <Route path="/methodology" element={<Methodology />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
