@@ -12,6 +12,7 @@ import type { Location } from "@/utils/locationHelpers";
 import { auth } from "@/lib/firebase";
 import { fetchEmissionsData } from "@/api/emissions";
 import type { SurveyData as SurveyDataType, SurveyEmissions as SurveyEmissionsType } from "@/types/emissions";
+import { useAuth } from "@/contexts/AuthContext";
 
 export type SurveyData = {
   // Location
@@ -65,11 +66,67 @@ export type SurveyEmissions = {
 
 const steps = ["pre-survey", "transportation", "diet", "energy", "breakdown"];
 
+// Cache structure with timestamp
+interface CalculatorCache {
+  surveyData: SurveyData;
+  surveyEmissions: SurveyEmissions;
+  location: Location | null;
+  lastUpdated: number; // Unix timestamp in milliseconds
+}
+
+const STORAGE_KEY = 'fg-calculator-cache';
+
+// Save to cache (only called from Breakdown page)
+export const saveCalculatorCache = (
+  surveyData: SurveyData,
+  surveyEmissions: SurveyEmissions,
+  location: Location | null
+) => {
+  try {
+    const cache: CalculatorCache = {
+      surveyData,
+      surveyEmissions,
+      location,
+      lastUpdated: Date.now(), // Current timestamp
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cache));
+  } catch (e) {
+    console.warn('Failed to save calculator cache:', e);
+  }
+};
+
+// Load from cache
+export const loadCalculatorCache = (): CalculatorCache | null => {
+  try {
+    const cached = localStorage.getItem(STORAGE_KEY);
+    if (!cached) return null;
+    const parsed = JSON.parse(cached);
+    // Validate it has required fields
+    if (parsed.surveyData && parsed.lastUpdated) {
+      return parsed as CalculatorCache;
+    }
+    return null;
+  } catch (e) {
+    console.warn('Failed to load calculator cache:', e);
+    return null;
+  }
+};
+
+// Clear cache
+export const clearCalculatorCache = () => {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (e) {
+    console.warn('Failed to clear calculator cache:', e);
+  }
+};
+
 const CarbonCalculator = () => {
   const navigate = useNavigate();
   const routerLocation = useRouterLocation();
   const searchParams = new URLSearchParams(routerLocation.search);
   const currentStep = searchParams.get("step") || "pre-survey";
+  const { user: authUser, loading: authLoading } = useAuth();
 
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -111,47 +168,60 @@ const CarbonCalculator = () => {
     window.scrollTo(0, 0);
   }, [routerLocation.search]);
 
-  // Load existing data if user is logged in
+  // Load existing data if user is logged in, or cache if anonymous
   useEffect(() => {
-    const loadUserData = async () => {
-      if (auth.currentUser && !dataLoaded) {
-        try {
-          const existingData = await fetchEmissionsData();
-          if (existingData) {
-            // Merge existing data with current state
-            setSurveyData({
-              ...surveyData,
-              ...existingData.surveyData,
-            });
-            setSurveyEmissions({
-              ...surveyEmissions,
-              ...existingData.surveyEmissions,
-              totalEmissions: existingData.totalEmissions,
-              monthlyEmissions: existingData.monthlyEmissions,
-            });
+    // Wait for auth to initialize before loading data
+    if (authLoading) return;
 
-            // Set location if country exists
-            if (existingData.surveyData.country) {
-              const country = (locationData as Location[]).find(
-                (loc) => loc.abbreviation === existingData.surveyData.country
-              );
-              if (country) {
-                setSelectedLocation(country);
+    const loadUserData = async () => {
+      if (!dataLoaded) {
+        if (authUser) {
+          // Logged-in users: load from Firebase
+          try {
+            const existingData = await fetchEmissionsData();
+            if (existingData) {
+              // Merge existing data with current state
+              setSurveyData({
+                ...surveyData,
+                ...existingData.surveyData,
+              });
+              setSurveyEmissions({
+                ...surveyEmissions,
+                ...existingData.surveyEmissions,
+                totalEmissions: existingData.totalEmissions,
+                monthlyEmissions: existingData.monthlyEmissions,
+              });
+
+              // Set location if country exists
+              if (existingData.surveyData.country) {
+                const country = (locationData as Location[]).find(
+                  (loc) => loc.abbreviation === existingData.surveyData.country
+                );
+                if (country) {
+                  setSelectedLocation(country);
+                }
               }
             }
+            setDataLoaded(true);
+          } catch (error) {
+            console.error("Error loading user data:", error);
+            setDataLoaded(true);
+          }
+        } else {
+          // Anonymous users: load from cache
+          const cached = loadCalculatorCache();
+          if (cached) {
+            setSurveyData(cached.surveyData);
+            setSurveyEmissions(cached.surveyEmissions);
+            if (cached.location) setSelectedLocation(cached.location);
           }
           setDataLoaded(true);
-        } catch (error) {
-          console.error("Error loading user data:", error);
-          setDataLoaded(true);
         }
-      } else if (!auth.currentUser) {
-        setDataLoaded(true);
       }
     };
 
     loadUserData();
-  }, []);
+  }, [authLoading, authUser, dataLoaded]);
 
   const goToStep = (step: string) => {
     navigate(`/carbon-calculator?step=${step}`);
@@ -208,6 +278,7 @@ const CarbonCalculator = () => {
           <Breakdown
             surveyData={surveyData}
             surveyEmissions={surveyEmissions}
+            selectedLocation={selectedLocation}
           />
         );
       default:

@@ -24,13 +24,17 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import type { SurveyData, SurveyEmissions } from "@/pages/CarbonCalculator";
-import { auth } from "@/lib/firebase";
 import { saveEmissionsData, saveCommunityEmissionsData } from "@/api/emissions";
 import LoginModal from "@/components/auth/LoginModal";
+import { saveCalculatorCache, clearCalculatorCache } from "@/pages/CarbonCalculator";
+import { useAuth } from "@/contexts/AuthContext";
+
+import type { Location } from "@/utils/locationHelpers";
 
 type BreakdownProps = {
   surveyData: SurveyData;
   surveyEmissions: SurveyEmissions;
+  selectedLocation: Location | null;
 };
 
 const fadeUp = {
@@ -45,8 +49,9 @@ const stagger = {
   },
 };
 
-const Breakdown = ({ surveyData, surveyEmissions }: BreakdownProps) => {
+const Breakdown = ({ surveyData, surveyEmissions, selectedLocation }: BreakdownProps) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [dataSaved, setDataSaved] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -56,35 +61,46 @@ const Breakdown = ({ surveyData, surveyEmissions }: BreakdownProps) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  // Check auth status and save data if logged in
+  // Check auth status and save data
   useEffect(() => {
     const saveData = async () => {
-      const user = auth.currentUser;
       setIsLoggedIn(!!user);
 
-      if (user && !dataSaved) {
-        try {
-          // Save emissions data
-          await saveEmissionsData({
-            surveyData,
-            surveyEmissions,
-            totalEmissions: surveyEmissions.totalEmissions || 0,
-            monthlyEmissions: surveyEmissions.monthlyEmissions || 0,
-          });
+      // Only save if we have valid data (totalEmissions > 0)
+      // This prevents overwriting cache/Firebase with 0s when revisiting the page
+      const hasValidData = (surveyEmissions.totalEmissions || 0) > 0;
 
-          // Update community stats
-          await saveCommunityEmissionsData(surveyEmissions.totalEmissions || 0);
+      if (!dataSaved && hasValidData) {
+        if (user) {
+          // Logged-in users: save to Firebase only (not cache)
+          try {
+            await saveEmissionsData({
+              surveyData,
+              surveyEmissions,
+              totalEmissions: surveyEmissions.totalEmissions || 0,
+              monthlyEmissions: surveyEmissions.monthlyEmissions || 0,
+            });
 
+            await saveCommunityEmissionsData(surveyEmissions.totalEmissions || 0);
+
+            // Clear cache after successful Firebase save
+            clearCalculatorCache();
+
+            setDataSaved(true);
+            //console.log("Data saved successfully!");
+          } catch (error) {
+            console.error("Error saving data:", error);
+          }
+        } else {
+          // Anonymous users: save to cache only
+          saveCalculatorCache(surveyData, surveyEmissions, selectedLocation);
           setDataSaved(true);
-          //console.log("Data saved successfully!");
-        } catch (error) {
-          console.error("Error saving data:", error);
         }
       }
     };
 
     saveData();
-  }, [surveyData, surveyEmissions, dataSaved]);
+  }, [user, surveyData, surveyEmissions, selectedLocation, dataSaved]);
 
   const totalEmissions = surveyEmissions.totalEmissions || 0;
   const avgAmericanEmissions = 16; // Average American carbon footprint
@@ -618,24 +634,9 @@ const Breakdown = ({ surveyData, surveyEmissions }: BreakdownProps) => {
       <LoginModal
         isOpen={loginModalOpen}
         onClose={() => setLoginModalOpen(false)}
-        onSuccess={async () => {
-          // After successful login, save the data
-          try {
-            await saveEmissionsData({
-              surveyData,
-              surveyEmissions,
-              totalEmissions: surveyEmissions.totalEmissions || 0,
-              monthlyEmissions: surveyEmissions.monthlyEmissions || 0,
-            });
-            await saveCommunityEmissionsData(
-              surveyEmissions.totalEmissions || 0
-            );
-            setDataSaved(true);
-            setIsLoggedIn(true);
-            //console.log("Data saved after login!");
-          } catch (error) {
-            console.error("Error saving data after login:", error);
-          }
+        onSuccess={() => {
+          // Sync happens automatically in AuthContext
+          setIsLoggedIn(true);
         }}
       />
     </motion.div>

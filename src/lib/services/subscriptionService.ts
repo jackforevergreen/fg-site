@@ -25,9 +25,7 @@ export async function getSubscriptionStatus(userId: string): Promise<Subscriptio
     const subscriptionsRef = collection(db, `users/${userId}/subscriptions`);
     const q = query(
       subscriptionsRef,
-      where('status', 'in', ['active', 'trialing']),
-      orderBy('created', 'desc'),
-      limit(1)
+      where('status', 'in', ['active', 'trialing'])
     );
 
     const querySnapshot = await getDocs(q);
@@ -36,7 +34,14 @@ export async function getSubscriptionStatus(userId: string): Promise<Subscriptio
       return null;
     }
 
-    const subscriptionDoc = querySnapshot.docs[0];
+    // Sort in memory instead of using orderBy to avoid needing a composite index
+    const sortedDocs = querySnapshot.docs.sort((a, b) => {
+      const aCreated = a.data().created;
+      const bCreated = b.data().created;
+      return bCreated - aCreated;
+    });
+
+    const subscriptionDoc = sortedDocs[0];
     return {
       id: subscriptionDoc.id,
       ...subscriptionDoc.data(),
@@ -109,9 +114,7 @@ export function subscribeToSubscription(
   const subscriptionsRef = collection(db, `users/${userId}/subscriptions`);
   const q = query(
     subscriptionsRef,
-    where('status', 'in', ['active', 'trialing']),
-    orderBy('created', 'desc'),
-    limit(1)
+    where('status', 'in', ['active', 'trialing'])
   );
 
   return onSnapshot(
@@ -122,7 +125,14 @@ export function subscribeToSubscription(
         return;
       }
 
-      const subscriptionDoc = snapshot.docs[0];
+      // Sort in memory instead of using orderBy to avoid needing a composite index
+      const sortedDocs = snapshot.docs.sort((a, b) => {
+        const aCreated = a.data().created;
+        const bCreated = b.data().created;
+        return bCreated - aCreated;
+      });
+
+      const subscriptionDoc = sortedDocs[0];
       callback({
         id: subscriptionDoc.id,
         ...subscriptionDoc.data(),
@@ -181,16 +191,18 @@ export async function getSubscriptionHistory(userId: string): Promise<Subscripti
     const subscriptionsRef = collection(db, `users/${userId}/subscriptions`);
     const q = query(
       subscriptionsRef,
-      where('status', 'in', ['canceled', 'unpaid', 'incomplete_expired']),
-      orderBy('created', 'desc')
+      where('status', 'in', ['canceled', 'unpaid', 'incomplete_expired'])
     );
 
     const querySnapshot = await getDocs(q);
 
-    return querySnapshot.docs.map((doc) => ({
+    // Sort in memory instead of using orderBy to avoid needing a composite index
+    const subscriptions = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     } as Subscription));
+
+    return subscriptions.sort((a, b) => b.created - a.created);
   } catch (error) {
     console.error('Error fetching subscription history:', error);
     throw new Error('Failed to fetch subscription history');
