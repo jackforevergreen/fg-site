@@ -9,8 +9,6 @@
       "Read(//c/Users/Mark/Documents/Forevergreen/fg-react-app/client/**)",
       "Bash(cat:*)",
       "Read(//c/Users/Mark/Documents/Forevergreen/fg-react-app/**)",
-      "Bash(ls \"C:\\Users\\Mark\\Documents\\Forevergreen\\fg-react-app\\client\\app\\(commerce)\")",
-      "Bash(find \"C:\\Users\\Mark\\Documents\\Forevergreen\\fg-react-app\\client\\app\\(commerce)\" -name \"*.tsx\")",
       "Bash(firebase functions:list)",
       "Bash(find:*)",
       "Read(//c/Users/Mark/Documents/Forevergreen/**)"

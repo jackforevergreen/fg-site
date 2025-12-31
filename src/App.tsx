@@ -20,6 +20,8 @@ import Profile from "./pages/Profile";
 import Projects from "./pages/Projects";
 import CarbonCredis from "./pages/Shop";
 import Subscriptions from "./pages/Subscriptions";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 const queryClient = new QueryClient();
 
@@ -44,10 +46,12 @@ const App = () => (
               <Route path="/profile" element={<Profile />} />
               <Route path="/certificates" element={<Certificates />} />
               <Route path="/projects" element={<Projects />} />
+              <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/flights" element={<Flights />} />
+              <Route path="/methodology" element={<Methodology />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
-              <Route path="/flights" element={<Flights />} />
-            <Route path="/methodology" element={<Methodology />} />
           </Routes>
           </BrowserRouter>
         </TooltipProvider>
