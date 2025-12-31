@@ -75,7 +75,7 @@ const statsDefault: Stat[] = [
     rotate: -8,
     coords: { x: 340, y: -210 },
     coordsSm: { x: 130, y: -70 },
-    link: "/shop",
+    link: "/carboncredits",
     linkType: "internal",
   },
   {
@@ -255,7 +255,7 @@ export default function CommunityStatsLocked({
       rotate: -8,
       coords: { x: 340, y: -210 },
       coordsSm: { x: 130, y: -70 },
-      link: "/shop",
+      link: "/carboncredits",
       linkType: "internal" as const,
     },
     {

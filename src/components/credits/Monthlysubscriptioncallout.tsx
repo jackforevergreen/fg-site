@@ -36,13 +36,6 @@ const MonthlySubscriptionCallout = () => {
                 every month. Join us in creating a greener planet, one
                 subscription at a time.
               </p>
-
-              <button
-                onClick={goToSubscription}
-                className="inline-flex items-center justify-center px-10 py-3 rounded-full border-2 border-foreground text-foreground hover:bg-foreground hover:text-background transition-all duration-300 font-semibold"
-              >
-                Subscribe
-              </button>
             </motion.div>
 
             {/* Right: Card */}

@@ -15,7 +15,7 @@ export function EmptyCart({ onClose }: EmptyCartProps) {
     if (onClose) {
       onClose();
     }
-    navigate('/shop');
+    navigate('/carboncredits');
   };
 
   return (

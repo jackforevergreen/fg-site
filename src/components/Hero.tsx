@@ -92,7 +92,7 @@ const Hero = () => {
             className="w-full sm:w-auto text-base sm:text-lg px-5 py-3 sm:px-6 sm:py-4"
             asChild
           >
-            <a href="/shop" className="inline-flex items-center gap-2">
+            <a href="/carboncredits" className="inline-flex items-center gap-2">
               Offset Now
             </a>
           </Button>
