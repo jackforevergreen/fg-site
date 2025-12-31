@@ -1,39 +1,78 @@
 // Shop page - Carbon credit marketplace
 
-import { useState, useRef, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ProductCard } from "@/components/shop/ProductCard";
-import { SubscriptionTierCard } from "@/components/shop/SubscriptionTierCard";
-import { TierCard, TierCardConfig } from "@/components/shop/TierCard";
+import LoginModal from "@/components/auth/LoginModal";
 import {
   AnimatedCartButton,
   AnimatedCartButtonHandle,
 } from "@/components/cart/AnimatedCartButton";
 import Navigation from "@/components/Navigation";
-import LoginModal from "@/components/auth/LoginModal";
-import { useProducts, useSubscriptionTiers, useYearlyOffsetTiers } from "@/hooks/useProducts";
-import { useAddToCart } from "@/hooks/useCart";
+import { ProductCard } from "@/components/shop/ProductCard";
+import { SubscriptionTierCard } from "@/components/shop/SubscriptionTierCard";
+import { TierCard, TierCardConfig } from "@/components/shop/TierCard";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
+import { useAddToCart } from "@/hooks/useCart";
 import { useEmissionsData } from "@/hooks/useEmissionsData";
-import { Product, PriceType } from "@/types/product";
+import {
+  useProducts,
+  useSubscriptionTiers,
+  useYearlyOffsetTiers,
+} from "@/hooks/useProducts";
+import { PriceType, Product } from "@/types/product";
 import { SubscriptionTier } from "@/types/subscription";
-import { YearlyOffsetTier, DISCOUNT_PERCENTAGE, getSavingsMessage } from "@/types/yearlyOffset";
+import {
+  DISCOUNT_PERCENTAGE,
+  getSavingsMessage,
+  YearlyOffsetTier,
+} from "@/types/yearlyOffset";
+import { motion } from "framer-motion";
+import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
+import CarbonCreditsHero from "@/components/credits/Carboncreditshero";
+import MonthlyOffset from "@/components/credits/Monthlyoffset";
+import MonthlySubscriptionCallout from "@/components/credits/Monthlysubscriptioncallout";
+import PathToNetZero from "@/components/credits/Pathtonetzero";
+import ProjectsShowcase from "@/components/credits/Projectsshowcase";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
 const Shop = () => {
+  const location = useLocation();
+
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { data: products = [] } = useProducts();
   const addToCartMutation = useAddToCart();
-  const [activeTab, setActiveTab] = useState<"one-time" | "subscription" | "yearly-offset">(
-    "one-time"
-  );
+  const [activeTab, setActiveTab] = useState<
+    "one-time" | "subscription" | "yearly-offset"
+  >("one-time");
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const cartButtonRef = useRef<AnimatedCartButtonHandle>(null);
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tab = params.get("tab") as
+      | "one-time"
+      | "subscription"
+      | "yearly-offset"
+      | null;
+
+    if (tab && tab !== activeTab) {
+      setActiveTab(tab);
+    }
+
+    if (location.hash === "#subscription") {
+      requestAnimationFrame(() => {
+        document.getElementById("subscription")?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search, location.hash]);
   // Fetch emissions data using shared hook
   const { yearlyEmissions, monthlyEmissions } = useEmissionsData({
     isAuthenticated,
@@ -49,15 +88,21 @@ const Shop = () => {
 
   // Get yearly offset price IDs to filter them out from one-time products
   const yearlyOffsetPriceIds = useMemo(() => {
-    return new Set(yearlyOffsetTiers.map(tier => tier.price_id).filter(Boolean));
+    return new Set(
+      yearlyOffsetTiers.map((tier) => tier.price_id).filter(Boolean)
+    );
   }, [yearlyOffsetTiers]);
 
   // Filter products based on active tab
   const filteredProducts = products.filter((product) => {
     if (activeTab === "one-time") {
       // Show one-time products but exclude yearly offset products
-      const hasOneTimePrice = product.prices?.some((price) => price.type === PriceType.ONE_TIME);
-      const isYearlyOffset = product.prices?.some((price) => yearlyOffsetPriceIds.has(price.id));
+      const hasOneTimePrice = product.prices?.some(
+        (price) => price.type === PriceType.ONE_TIME
+      );
+      const isYearlyOffset = product.prices?.some((price) =>
+        yearlyOffsetPriceIds.has(price.id)
+      );
       return hasOneTimePrice && !isYearlyOffset;
     }
     if (activeTab === "subscription") {
@@ -123,7 +168,8 @@ const Shop = () => {
     // Require authentication for subscriptions
     if (!isAuthenticated) {
       toast.error("Please sign in to subscribe", {
-        description: "Subscriptions require an account to manage billing and renewals",
+        description:
+          "Subscriptions require an account to manage billing and renewals",
         action: {
           label: "Sign In",
           onClick: () => setLoginModalOpen(true),
@@ -148,7 +194,9 @@ const Shop = () => {
     }
 
     // Verify the price matches the tier's monthly_price
-    const price = subscriptionProduct.prices?.find((p) => p.id === tier.price_id);
+    const price = subscriptionProduct.prices?.find(
+      (p) => p.id === tier.price_id
+    );
     if (price && price.unit_amount !== tier.monthly_price) {
       console.warn(
         `Price mismatch for tier ${tier.name}: expected ${tier.monthly_price}, got ${price.unit_amount}`
@@ -209,26 +257,35 @@ const Shop = () => {
   };
 
   // Convert yearly offset tiers to TierCardConfig
-  const yearlyTierCardConfigs: TierCardConfig[] = yearlyOffsetTiers.map((tier) => ({
-    id: tier.id,
-    name: `${tier.credits} Credits`,
-    description: `For up to ${tier.emissions_max} tons CO₂/year`,
-    price: tier.discounted_price,
-    originalPrice: tier.original_price,
-    priceLabel: "one-time payment",
-    features: [
-      `Offsets ${tier.credits} ton${tier.credits > 1 ? 's' : ''} CO₂/year`,
-      "Distributed across 12 months",
-      getSavingsMessage(tier),
-    ],
-    ctaText: tier.price_id ? "Add to Cart" : "Coming Soon",
-    disabled: !tier.price_id || addToCartMutation.isPending,
-    isRecommended: tier.id === recommendedYearlyTierId,
-    showDiscount: true,
-  }));
+  const yearlyTierCardConfigs: TierCardConfig[] = yearlyOffsetTiers.map(
+    (tier) => ({
+      id: tier.id,
+      name: `${tier.credits} Credits`,
+      description: `For up to ${tier.emissions_max} tons CO₂/year`,
+      price: tier.discounted_price,
+      originalPrice: tier.original_price,
+      priceLabel: "one-time payment",
+      features: [
+        `Offsets ${tier.credits} ton${tier.credits > 1 ? "s" : ""} CO₂/year`,
+        "Distributed across 12 months",
+        getSavingsMessage(tier),
+      ],
+      ctaText: tier.price_id ? "Add to Cart" : "Coming Soon",
+      disabled: !tier.price_id || addToCartMutation.isPending,
+      isRecommended: tier.id === recommendedYearlyTierId,
+      showDiscount: true,
+    })
+  );
 
   return (
     <div className="min-h-screen bg-background">
+      {/* All sections */}
+      <CarbonCreditsHero />
+      <PathToNetZero />
+      <MonthlyOffset />
+      <MonthlySubscriptionCallout />
+      <ProjectsShowcase />
+
       {/* Navigation */}
       <Navigation />
 
@@ -267,6 +324,9 @@ const Shop = () => {
               one-time purchases or monthly subscriptions.
             </motion.p>
           </div>
+
+          {/* Anchor target for subscription deep-link */}
+          <div id="subscription" className="scroll-mt-20" />
 
           {/* Product Filter Tabs */}
           <motion.div
@@ -316,7 +376,8 @@ const Shop = () => {
                   LIMITED TIME OFFER
                 </h2>
                 <p className="text-lg md:text-xl text-white/90">
-                  Save {DISCOUNT_PERCENTAGE}% on yearly carbon offsets - One payment covers the whole year!
+                  Save {DISCOUNT_PERCENTAGE}% on yearly carbon offsets - One
+                  payment covers the whole year!
                 </p>
               </div>
             )}
@@ -326,8 +387,11 @@ const Shop = () => {
               <div className="mb-6 p-3 bg-gradient-to-r from-green-50 to-green-100 border border-green-200 rounded-lg text-center">
                 <p className="text-md text-green-700 font-italic">
                   Based on {isAuthenticated ? "your" : "the average"} carbon
-                  footprint of <span className="font-bold">{monthlyEmissions.toFixed(1)} tons/month</span>, we
-                  recommend:
+                  footprint of{" "}
+                  <span className="font-bold">
+                    {monthlyEmissions.toFixed(1)} tons/month
+                  </span>
+                  , we recommend:
                 </p>
               </div>
             )}
@@ -336,8 +400,12 @@ const Shop = () => {
             {activeTab === "yearly-offset" && yearlyEmissions && (
               <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-green-100 border border-green-200 rounded-lg text-center">
                 <p className="text-md text-green-700 font-italic">
-                  Based on {isAuthenticated ? "your" : "the average"} yearly carbon footprint of{" "}
-                  <span className="font-bold">{yearlyEmissions.toFixed(1)} tons</span>, we recommend:
+                  Based on {isAuthenticated ? "your" : "the average"} yearly
+                  carbon footprint of{" "}
+                  <span className="font-bold">
+                    {yearlyEmissions.toFixed(1)} tons
+                  </span>
+                  , we recommend:
                 </p>
               </div>
             )}
@@ -353,7 +421,8 @@ const Shop = () => {
               ) : yearlyOffsetTiers.length === 0 ? (
                 <div className="text-center py-12">
                   <p className="text-muted-foreground">
-                    Yearly offset options are being configured. Please check back soon.
+                    Yearly offset options are being configured. Please check
+                    back soon.
                   </p>
                 </div>
               ) : (
@@ -362,7 +431,9 @@ const Shop = () => {
                     <TierCard
                       key={config.id}
                       config={config}
-                      onSelect={() => handleAddYearlyOffset(yearlyOffsetTiers[index])}
+                      onSelect={() =>
+                        handleAddYearlyOffset(yearlyOffsetTiers[index])
+                      }
                       loading={addToCartMutation.isPending}
                       isAuthenticated={isAuthenticated}
                     />
@@ -423,7 +494,8 @@ const Shop = () => {
                 Want to track your carbon offset journey?
               </p>
               <p className="text-muted-foreground mb-4">
-                Sign in to save your purchases, track your impact, and access exclusive features. Or continue as a guest!
+                Sign in to save your purchases, track your impact, and access
+                exclusive features. Or continue as a guest!
               </p>
               <Button
                 onClick={() => setLoginModalOpen(true)}

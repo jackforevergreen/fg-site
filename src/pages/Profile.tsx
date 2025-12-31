@@ -1,8 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { fetchEmissionsData } from "@/api/emissions";
 import Navigation from "@/components/Navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,14 +11,36 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { auth } from "@/lib/firebase";
-import { signOut, User, deleteUser, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
-import { fetchEmissionsData } from "@/api/emissions";
 import { EmissionsDocument } from "@/types/emissions";
-import { LogOut, User as UserIcon, Calendar, Leaf, Trash2, Edit2, Car, Utensils, Zap, TrendingDown, CreditCard, FileText } from "lucide-react";
+import {
+  deleteUser,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  signOut,
+  User,
+} from "firebase/auth";
 import { motion } from "framer-motion";
+import {
+  Calendar,
+  Car,
+  CreditCard,
+  Edit2,
+  Leaf,
+  LogOut,
+  Trash2,
+  TrendingDown,
+  User as UserIcon,
+  Utensils,
+  Zap,
+  FileText,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -38,7 +57,9 @@ const stagger = {
 const Profile = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
-  const [emissionsData, setEmissionsData] = useState<EmissionsDocument | null>(null);
+  const [emissionsData, setEmissionsData] = useState<EmissionsDocument | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [deletePassword, setDeletePassword] = useState("");
   const [deleteError, setDeleteError] = useState("");
@@ -70,7 +91,7 @@ const Profile = () => {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      window.scrollTo({ top: 0, behavior: "instant" });
       navigate("/");
     } catch (error) {
       console.error("Error signing out:", error);
@@ -127,7 +148,9 @@ const Profile = () => {
       if (error.code === "auth/wrong-password") {
         setDeleteError("Incorrect password. Please try again.");
       } else if (error.code === "auth/requires-recent-login") {
-        setDeleteError("Please sign out and sign in again before deleting your account.");
+        setDeleteError(
+          "Please sign out and sign in again before deleting your account."
+        );
       } else {
         setDeleteError("Failed to delete account. Please try again.");
       }
@@ -148,7 +171,6 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 via-white to-blue-50">
-
       <Navigation />
 
       <div className="container mx-auto px-4 py-12 relative z-10 mt-8">
@@ -172,7 +194,8 @@ const Profile = () => {
               {user?.displayName || "Your Profile"}
             </h1>
             <p className="text-xl text-gray-600">
-              Welcome back{user?.displayName ? `, ${user.displayName.split(" ")[0]}` : ""}!
+              Welcome back
+              {user?.displayName ? `, ${user.displayName.split(" ")[0]}` : ""}!
             </p>
           </motion.div>
 
@@ -185,32 +208,46 @@ const Profile = () => {
                     <UserIcon className="h-7 w-7 text-white" />
                   </div>
                 </div>
-                <CardTitle className="text-3xl font-bold text-gray-900">Account Information</CardTitle>
+                <CardTitle className="text-3xl font-bold text-gray-900">
+                  Account Information
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 pt-6">
                 <div className="flex items-center justify-between p-5 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border-2 border-gray-200 shadow-sm">
                   <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">Email</p>
-                    <p className="text-lg font-semibold text-gray-900">{user?.email}</p>
+                    <p className="text-sm font-medium text-gray-600 mb-1">
+                      Email
+                    </p>
+                    <p className="text-lg font-semibold text-gray-900">
+                      {user?.email}
+                    </p>
                   </div>
                 </div>
                 {user?.displayName && (
                   <div className="flex items-center justify-between p-5 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border-2 border-gray-200 shadow-sm">
                     <div>
-                      <p className="text-sm font-medium text-gray-600 mb-1">Name</p>
-                      <p className="text-lg font-semibold text-gray-900">{user.displayName}</p>
+                      <p className="text-sm font-medium text-gray-600 mb-1">
+                        Name
+                      </p>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {user.displayName}
+                      </p>
                     </div>
                   </div>
                 )}
                 <div className="flex items-center justify-between p-5 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border-2 border-gray-200 shadow-sm">
                   <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">Account Created</p>
+                    <p className="text-sm font-medium text-gray-600 mb-1">
+                      Account Created
+                    </p>
                     <p className="text-lg font-semibold text-gray-900">
                       {user?.metadata.creationTime
-                        ? new Date(user.metadata.creationTime).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
+                        ? new Date(
+                            user.metadata.creationTime
+                          ).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
                           })
                         : "N/A"}
                     </p>
@@ -230,7 +267,9 @@ const Profile = () => {
                     <Leaf className="h-7 w-7 text-white" />
                   </div>
                 </div>
-                <CardTitle className="text-3xl font-bold text-gray-900">This Month's Carbon Footprint</CardTitle>
+                <CardTitle className="text-3xl font-bold text-gray-900">
+                  This Month's Carbon Footprint
+                </CardTitle>
               </CardHeader>
               <CardContent className="pt-6">
                 {emissionsData ? (
@@ -251,28 +290,49 @@ const Profile = () => {
                       <div className="p-5 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg border-2 border-blue-200 shadow-sm hover:shadow-md transition-shadow">
                         <div className="flex items-center gap-2 mb-2">
                           <Car className="h-5 w-5 text-blue-600" />
-                          <p className="text-sm font-semibold text-gray-700">Transportation</p>
+                          <p className="text-sm font-semibold text-gray-700">
+                            Transportation
+                          </p>
                         </div>
                         <p className="text-2xl font-bold text-gray-900">
-                          {emissionsData.surveyEmissions?.transportationEmissions?.toFixed(2) || "0.00"} <span className="text-sm font-medium text-gray-600">tons</span>
+                          {emissionsData.surveyEmissions?.transportationEmissions?.toFixed(
+                            2
+                          ) || "0.00"}{" "}
+                          <span className="text-sm font-medium text-gray-600">
+                            tons
+                          </span>
                         </p>
                       </div>
                       <div className="p-5 bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg border-2 border-orange-200 shadow-sm hover:shadow-md transition-shadow">
                         <div className="flex items-center gap-2 mb-2">
                           <Utensils className="h-5 w-5 text-orange-600" />
-                          <p className="text-sm font-semibold text-gray-700">Diet</p>
+                          <p className="text-sm font-semibold text-gray-700">
+                            Diet
+                          </p>
                         </div>
                         <p className="text-2xl font-bold text-gray-900">
-                          {emissionsData.surveyEmissions?.dietEmissions?.toFixed(2) || "0.00"} <span className="text-sm font-medium text-gray-600">tons</span>
+                          {emissionsData.surveyEmissions?.dietEmissions?.toFixed(
+                            2
+                          ) || "0.00"}{" "}
+                          <span className="text-sm font-medium text-gray-600">
+                            tons
+                          </span>
                         </p>
                       </div>
                       <div className="p-5 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg border-2 border-yellow-200 shadow-sm hover:shadow-md transition-shadow">
                         <div className="flex items-center gap-2 mb-2">
                           <Zap className="h-5 w-5 text-yellow-600" />
-                          <p className="text-sm font-semibold text-gray-700">Energy</p>
+                          <p className="text-sm font-semibold text-gray-700">
+                            Energy
+                          </p>
                         </div>
                         <p className="text-2xl font-bold text-gray-900">
-                          {emissionsData.surveyEmissions?.energyEmissions?.toFixed(2) || "0.00"} <span className="text-sm font-medium text-gray-600">tons</span>
+                          {emissionsData.surveyEmissions?.energyEmissions?.toFixed(
+                            2
+                          ) || "0.00"}{" "}
+                          <span className="text-sm font-medium text-gray-600">
+                            tons
+                          </span>
                         </p>
                       </div>
                     </div>
@@ -294,7 +354,8 @@ const Profile = () => {
                       </div>
                     </div>
                     <p className="text-xl text-gray-700 mb-6 font-medium">
-                      You haven't calculated your carbon footprint this month yet.
+                      You haven't calculated your carbon footprint this month
+                      yet.
                     </p>
                     <Button
                       onClick={handleTakeCalculator}
@@ -356,16 +417,23 @@ const Profile = () => {
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle className="text-2xl">Delete Account</AlertDialogTitle>
+                  <AlertDialogTitle className="text-2xl">
+                    Delete Account
+                  </AlertDialogTitle>
                   <AlertDialogDescription className="text-base">
-                    Are you sure you want to delete your account? This action cannot be undone.
-                    All your data, including emissions history, will be permanently deleted.
+                    Are you sure you want to delete your account? This action
+                    cannot be undone. All your data, including emissions
+                    history, will be permanently deleted.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
 
-                {user?.providerData.some((p) => p.providerId === "password") && (
+                {user?.providerData.some(
+                  (p) => p.providerId === "password"
+                ) && (
                   <div className="space-y-2">
-                    <Label htmlFor="delete-password">Confirm your password</Label>
+                    <Label htmlFor="delete-password">
+                      Confirm your password
+                    </Label>
                     <Input
                       id="delete-password"
                       type="password"
@@ -381,7 +449,9 @@ const Profile = () => {
                 )}
 
                 <AlertDialogFooter>
-                  <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel disabled={isDeleting}>
+                    Cancel
+                  </AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleDeleteAccount}
                     disabled={isDeleting}
