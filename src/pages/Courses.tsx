@@ -87,7 +87,7 @@ const Courses = () => {
               </p>
 
               <a
-                href="https://forevergreen.notion.site/A-Practical-Guide-to-Sustainable-Living-16b5ac92fa0280bfb29fc9e6f2e92ee8"
+                href="https://fg-tja.notion.site/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-lg font-medium transition-colors"
@@ -346,12 +346,12 @@ const Courses = () => {
                   TJA DISTRIBUTORS
                 </h3>
                 <a
-                  href="https://tjadistributors.com/home"
+                  href="https://sites.google.com/view/tjadistributors/home"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 mb-4 hover:text-primary transition-colors"
                 >
-                  TJADISTRIBUTORS.COM/HOME
+                  SITES.GOOGLE.COM/VIEW/TJADISTRIBUTORS/HOME
                 </a>
                 <p className="text-sm text-gray-500">
                   Sustainable solutions for business
@@ -443,7 +443,7 @@ const Courses = () => {
                   materials
                 </p>
                 <a
-                  href="https://forevergreen.notion.site/A-Practical-Guide-to-Sustainable-Living-16b5ac92fa0280bfb29fc9e6f2e92ee8"
+                  href="https://fg-tja.notion.site/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-primary hover:text-primary/80 text-sm font-medium"
@@ -476,7 +476,7 @@ const Courses = () => {
                   Optional downloadable workbooks and planning templates
                 </p>
                 <a
-                  href="https://forevergreen.notion.site/A-Practical-Guide-to-Sustainable-Living-16b5ac92fa0280bfb29fc9e6f2e92ee8"
+                  href="https://stan.store/Forevergreen/p/coursepdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-primary hover:text-primary/80 text-sm font-medium"
@@ -495,7 +495,7 @@ const Courses = () => {
               className="mt-12"
             >
               <a
-                href="https://forevergreen.notion.site/A-Practical-Guide-to-Sustainable-Living-16b5ac92fa0280bfb29fc9e6f2e92ee8"
+                href="https://fg-tja.notion.site/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-lg font-medium text-lg transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"

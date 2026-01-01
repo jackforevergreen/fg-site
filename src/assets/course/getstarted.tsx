@@ -15,6 +15,7 @@ const steps = [
     title: "Watch the course on YouTube",
     image: YT,
     body: "Open the YouTube playlist and watch the videos. These videos give you the big picture of how the course works and what you can change in your daily life.",
+    link: "https://youtube.com/playlist?list=PLBrL74i7fHKAm0UE0fX3XGDxgBQrskKGn&si=QC7CuNMJ4-GIGBU8",
   },
   {
     number: "02",
@@ -22,10 +23,11 @@ const steps = [
     title: "Follow along in Notion",
     image: Notion,
     body: "Move through the Transport, Diet, and Energy modules at your own pace. Each episode focuses on practical changes you can actually make.",
+    link: "https://fg-tja.notion.site/",
   },
   {
     number: "03",
-    label: "Test what\nyou’ve learned",
+    label: "Test what\nyou've learned",
     title: "Complete the final quiz",
     image: Forms,
     body: "Keep the Notion workspace open while you go. All of the questions, notes, and tools you need are already there to guide you through the quiz.",
@@ -35,14 +37,15 @@ const steps = [
     label: "Lock in your\nimpact",
     title: "Get certified + offset",
     image: Cert,
-    body: "Once you’ve finished will get a certificate of completion and the option to offset one year of CO2 for 50% off!",
+    body: "Once you've finished will get a certificate of completion and the option to offset one year of CO2 for 50% off!",
   },
   {
     number: "05",
     label: "Keep using\nthe hub",
     title: "Live your life",
     image: Logo,
-    body: "Revisit the Notion dashboard whenever you need a refresh. It’s your home base for tools, reflection prompts, and future updates.",
+    body: "Revisit the Notion dashboard whenever you need a refresh. It's your home base for tools, reflection prompts, and future updates.",
+    link: "https://fg-tja.notion.site/",
   },
 ];
 
@@ -72,6 +75,35 @@ const HowToGetStarted = () => {
         {/* Steps */}
         <div className="max-w-5xl mx-auto mt-16 space-y-10">
           {steps.map((step, index) => {
+            const CardContent = (
+              <div className="h-full rounded-3xl bg-card border border-border shadow-md hover:shadow-xl transition-all duration-300 px-6 py-5 md:px-8 md:py-6">
+                <div className="flex items-center gap-4 md:gap-5">
+                  {/* Icon */}
+                  <div className="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-primary/10 shrink-0">
+                    <img
+                      src={
+                        (step.image as any).src
+                          ? (step.image as any).src
+                          : (step.image as any)
+                      }
+                      alt={step.title}
+                      className="w-9 h-9 md:w-10 md:h-10 object-contain"
+                    />
+                  </div>
+
+                  {/* Text */}
+                  <div className="space-y-2">
+                    <h2 className="text-lg md:text-xl font-semibold text-foreground">
+                      {step.title}
+                    </h2>
+                    <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                      {step.body}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+
             return (
               <motion.div
                 key={step.number}
@@ -98,32 +130,18 @@ const HowToGetStarted = () => {
 
                 {/* Card */}
                 <div className="flex-1">
-                  <div className="h-full rounded-3xl bg-card border border-border shadow-md hover:shadow-xl transition-all duration-300 px-6 py-5 md:px-8 md:py-6">
-                    <div className="flex items-center gap-4 md:gap-5">
-                      {/* Icon */}
-                      <div className="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-primary/10 shrink-0">
-                        <img
-                          src={
-                            (step.image as any).src
-                              ? (step.image as any).src
-                              : (step.image as any)
-                          }
-                          alt={step.title}
-                          className="w-9 h-9 md:w-10 md:h-10 object-contain"
-                        />
-                      </div>
-
-                      {/* Text */}
-                      <div className="space-y-2">
-                        <h2 className="text-lg md:text-xl font-semibold text-foreground">
-                          {step.title}
-                        </h2>
-                        <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                          {step.body}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  {step.link ? (
+                    <a
+                      href={step.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block cursor-pointer"
+                    >
+                      {CardContent}
+                    </a>
+                  ) : (
+                    CardContent
+                  )}
                 </div>
               </motion.div>
             );
@@ -150,7 +168,7 @@ const HowToGetStarted = () => {
           </p>
 
           <a
-            href="https://forevergreen.notion.site/A-Practical-Guide-to-Sustainable-Living-16b5ac92fa0280bfb29fc9e6f2e92ee8"
+            href="https://fg-tja.notion.site/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-lg font-medium text-lg transition-transform duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
