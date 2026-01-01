@@ -12,15 +12,15 @@ import { useState } from "react";
 
 const footerLinks = {
   company: [
-    { name: "About", href: "#" },
-    { name: "FAQ", href: "#" },
+    { name: "About", href: "/about" },
+    { name: "FAQ", href: "/faq" },
     { name: "Contact", href: "mailto:info@forevergreen.earth" }
   ],
   products: [
-    { name: "Carbon Credits", href: "#" },
-    { name: "Methodology", href: "#" },
-    { name: "Offset Flights", href: "#" },
-    { name: "Store", href: "#" }
+    { name: "Carbon Credits", href: "/carboncredits" },
+    { name: "Methodology", href: "/methodology" },
+    { name: "Offset Flights", href: "/flight-offset" },
+    { name: "Store", href: "/carboncredits" }
   ],
   policy: [
     { name: "Privacy Policy", href: "/privacy-policy" },

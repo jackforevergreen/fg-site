@@ -10,10 +10,10 @@ import {
 
 const Faq = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Navigation />
 
-      <div className="container mx-auto px-4 pt-24 pb-16 max-w-4xl">
+      <div className="container mx-auto px-4 pt-24 pb-16 max-w-4xl flex-grow">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
