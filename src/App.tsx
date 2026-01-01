@@ -22,6 +22,7 @@ import CarbonCredis from "./pages/Shop";
 import Subscriptions from "./pages/Subscriptions";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Faq from "./pages/Faq";
 
 const queryClient = new QueryClient();
 
@@ -40,7 +41,7 @@ const App = () => (
               <Route path="/checkout/success" element={<CheckoutSuccess />} />
               <Route path="/subscriptions" element={<Subscriptions />} />
               <Route path="/learn" element={<Learn />} />
-              <Route path="/courses" element={<Courses />} />
+              <Route path="/course" element={<Courses />} />
               <Route path="/about" element={<About />} />
               <Route path="/carbon-calculator" element={<CarbonCalculator />} />
               <Route path="/profile" element={<Profile />} />
@@ -48,7 +49,8 @@ const App = () => (
               <Route path="/projects" element={<Projects />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/flights" element={<Flights />} />
+              <Route path="/flight-offset" element={<Flights />} />
+              <Route path="/faq" element={<Faq />} />
               <Route path="/methodology" element={<Methodology />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

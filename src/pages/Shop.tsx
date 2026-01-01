@@ -286,6 +286,9 @@ const Shop = () => {
       <MonthlySubscriptionCallout />
       <ProjectsShowcase />
 
+      {/* Anchor target for projects deep-link */}
+      <div id="projects" className="scroll-mt-20" />
+
       {/* Navigation */}
       <Navigation />
 

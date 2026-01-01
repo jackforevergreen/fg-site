@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { CreditCard, Plane, Repeat } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import afforestCredit from "@/assets/afforestation-credit.png";
 import energyCredit from "@/assets/energy-waste-credit.png";
@@ -51,6 +52,7 @@ const projects = [
 ] as const;
 
 export default function OffsetOptionsShowcase() {
+  const navigate = useNavigate();
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef<number | null>(null);
@@ -269,7 +271,7 @@ export default function OffsetOptionsShowcase() {
                   variant="primary-action"
                   size="lg"
                   className="w-full rounded-xl py-3 text-lg"
-                  onClick={() => navigate("/flights")}
+                  onClick={() => navigate("/flight-offset")}
                 >
                   Offset This Flight
                 </Button>
