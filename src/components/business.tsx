@@ -84,8 +84,11 @@ export default function NetZeroPromo() {
             variant="primary-action"
             size="lg"
             className="text-lg md:text-xl px-8 md:px-10 py-6 md:py-7 inline-flex items-center gap-3 rounded-xl"
+            asChild
           >
-            Get Started Today
+            <a href="mailto:info@forevergreen.earth">
+              Get Started Today
+            </a>
           </Button>
         </motion.div>
       </div>

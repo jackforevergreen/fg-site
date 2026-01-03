@@ -3,8 +3,31 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Mail } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const Newsletter = () => {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email || !email.includes("@")) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // Simulate API call
+    setTimeout(() => {
+      toast.success("Thanks for subscribing! Check your email for confirmation.");
+      setEmail("");
+      setIsSubmitting(false);
+    }, 500);
+  };
+
   return (
     <section id="newsletter" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
@@ -28,16 +51,25 @@ const Newsletter = () => {
             </p>
 
             {/* Form */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 mb-6">
               <Input
                 type="email"
                 placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="flex-1 h-12 rounded-xl border-2 border-input focus:border-primary transition-colors"
+                disabled={isSubmitting}
               />
-              <Button variant="hero" size="lg" className="px-8 h-12 rounded-xl text-lg">
-                Join the Newsletter
+              <Button
+                type="submit"
+                variant="hero"
+                size="lg"
+                className="px-8 h-12 rounded-xl text-lg"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Subscribing..." : "Join the Newsletter"}
               </Button>
-            </div>
+            </form>
 
             {/* Footnote */}
             <p className="text-sm text-muted-foreground">

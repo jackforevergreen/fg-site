@@ -146,6 +146,7 @@ export default function OffsetOptionsShowcase() {
                   variant="primary-action"
                   size="lg"
                   className="w-full rounded-xl py-3 text-lg"
+                  onClick={() => navigate("/carboncredits?tab=subscription#subscription")}
                 >
                   Start Subscription
                 </Button>
@@ -207,6 +208,7 @@ export default function OffsetOptionsShowcase() {
                   variant="primary-action"
                   size="lg"
                   className="w-full rounded-xl py-3 text-lg"
+                  onClick={() => navigate("/carboncredits")}
                 >
                   Offset Now
                 </Button>
