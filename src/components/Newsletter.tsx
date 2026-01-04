@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Mail } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { saveNewsletterSubscription } from "@/lib/services/newsletterService";
 
 const Newsletter = () => {
   const [email, setEmail] = useState("");
@@ -20,12 +21,16 @@ const Newsletter = () => {
 
     setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      await saveNewsletterSubscription(email);
       toast.success("Thanks for subscribing! Check your email for confirmation.");
       setEmail("");
+    } catch (error) {
+      toast.error("Failed to subscribe. Please try again.");
+      console.error("Newsletter subscription error:", error);
+    } finally {
       setIsSubmitting(false);
-    }, 500);
+    }
   };
 
   return (
