@@ -74,10 +74,10 @@ export function parseDurationToSeconds(duration: string): number {
   return hours * 3600 + minutes * 60 + seconds;
 }
 
-// Utility: Check if video is a YouTube Short (duration <= 180 seconds / 3 minutes)
+// Utility: Check if video is a YouTube Short (duration <= 60 seconds / 1 minutes)
 export function isShort(duration: string): boolean {
   const durationInSeconds = parseDurationToSeconds(duration);
-  return durationInSeconds > 0 && durationInSeconds <= 180;
+  return durationInSeconds > 0 && durationInSeconds <= 60;
 }
 
 // Utility: Create API error
