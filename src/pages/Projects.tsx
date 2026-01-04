@@ -1,6 +1,7 @@
 import Navigation from "@/components/Navigation";
 import { motion } from "framer-motion";
 import { Droplet, ExternalLink, Sprout, Trees, Zap } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // Project main images
 import c1 from "@/assets/projects/c1.png";
@@ -38,6 +39,7 @@ import m2 from "@/assets/projects/m2.png";
 import m3 from "@/assets/projects/m3.jpeg";
 
 const Projects = () => {
+  const navigate = useNavigate();
   const projects = [
     {
       id: 1,
@@ -340,10 +342,14 @@ const Projects = () => {
 
                 {/* Action Buttons */}
                 <div className="flex gap-4">
-                  <button className="px-8 py-3 bg-green-700 text-white rounded-full hover:bg-green-800 transition-colors duration-300 font-medium">
+                  <button 
+                    onClick={() => navigate("/carboncredits")}
+                    className="px-8 py-3 bg-green-700 text-white rounded-full hover:bg-green-800 transition-colors duration-300 font-medium">
                     Buy Now
                   </button>
-                  <button className="px-8 py-3 border-2 border-green-700 text-green-700 rounded-full hover:bg-green-700 hover:text-white transition-colors duration-300 font-medium">
+                  <button 
+                    onClick={() => navigate("/learn")}
+                    className="px-8 py-3 border-2 border-green-700 text-green-700 rounded-full hover:bg-green-700 hover:text-white transition-colors duration-300 font-medium">
                     Read More
                   </button>
                 </div>

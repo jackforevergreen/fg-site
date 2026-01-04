@@ -63,7 +63,7 @@ const PathToNetZero = () => {
               </p>
 
               <button
-                onClick={() => navigate("/about")}
+                onClick={() => navigate("/projects")}
                 className="px-8 py-3 rounded-full border-2 border-foreground text-foreground hover:bg-foreground hover:text-background transition-all duration-300 font-medium"
               >
                 Read More

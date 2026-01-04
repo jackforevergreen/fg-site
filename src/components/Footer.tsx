@@ -135,7 +135,7 @@ const Footer = () => {
         
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-sage text-sm">
-            © 2024 by Forevergreen Earth INC.
+            © 2026 by Forevergreen Earth INC.
           </p>
           
           <div className="flex items-center gap-6">
