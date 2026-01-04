@@ -62,6 +62,24 @@ export function getRelativeTime(publishedAt: string): string {
   }
 }
 
+// Utility: Parse ISO 8601 duration to seconds (e.g., "PT1M30S" -> 90)
+export function parseDurationToSeconds(duration: string): number {
+  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return 0;
+
+  const hours = parseInt(match[1] || '0', 10);
+  const minutes = parseInt(match[2] || '0', 10);
+  const seconds = parseInt(match[3] || '0', 10);
+
+  return hours * 3600 + minutes * 60 + seconds;
+}
+
+// Utility: Check if video is a YouTube Short (duration <= 180 seconds / 3 minutes)
+export function isShort(duration: string): boolean {
+  const durationInSeconds = parseDurationToSeconds(duration);
+  return durationInSeconds > 0 && durationInSeconds <= 180;
+}
+
 // Utility: Create API error
 function createApiError(message: string, code?: number, details?: unknown): ApiError {
   return { message, code, details };
@@ -121,13 +139,15 @@ export async function fetchChannelStats(channelId: string = DEFAULT_CONFIG.chann
   };
 }
 
-// Fetch latest videos from channel
+// Fetch latest videos from channel (excludes YouTube Shorts)
 export async function fetchLatestVideos(
   channelId: string = DEFAULT_CONFIG.channelId,
   maxResults: number = DEFAULT_CONFIG.maxResults
 ): Promise<VideoData[]> {
-  // First, search for recent videos
-  const searchUrl = `${API_BASE_URL}/search?part=snippet&channelId=${channelId}&order=date&type=video&maxResults=${maxResults}&key=${DEFAULT_CONFIG.apiKey}`;
+  // Fetch more videos initially to ensure we have enough after filtering out shorts
+  const fetchCount = 50; // Fetch many videos to ensure we get enough regular videos after filtering
+
+  const searchUrl = `${API_BASE_URL}/search?part=snippet&channelId=${channelId}&order=date&type=video&maxResults=${fetchCount}&key=${DEFAULT_CONFIG.apiKey}`;
 
   const searchResponse = await apiRequest<YouTubeVideoSearchResponse>(searchUrl);
 
@@ -141,27 +161,33 @@ export async function fetchLatestVideos(
 
   const detailsResponse = await apiRequest<YouTubeVideoDetailsResponse>(detailsUrl);
 
-  // Combine search results with detailed statistics
-  return searchResponse.items.map((searchItem, index) => {
-    const detailItem = detailsResponse.items.find(detail => detail.id === searchItem.id.videoId);
-    const viewCount = detailItem ? parseInt(detailItem.statistics.viewCount, 10) : 0;
+  // Combine search results with detailed statistics and filter out shorts
+  const allVideos = searchResponse.items
+    .map((searchItem) => {
+      const detailItem = detailsResponse.items.find(detail => detail.id === searchItem.id.videoId);
+      const viewCount = detailItem ? parseInt(detailItem.statistics.viewCount, 10) : 0;
+      const duration = detailItem?.contentDetails?.duration || '';
 
-    return {
-      id: searchItem.id.videoId,
-      title: searchItem.snippet.title,
-      description: searchItem.snippet.description,
-      thumbnail: {
-        url: searchItem.snippet.thumbnails.high.url,
-        width: searchItem.snippet.thumbnails.high.width,
-        height: searchItem.snippet.thumbnails.high.height,
-      },
-      publishedAt: searchItem.snippet.publishedAt,
-      viewCount,
-      url: `https://www.youtube.com/watch?v=${searchItem.id.videoId}`,
-      duration: detailItem?.contentDetails?.duration,
-      relativeTime: getRelativeTime(searchItem.snippet.publishedAt),
-    };
-  });
+      return {
+        id: searchItem.id.videoId,
+        title: searchItem.snippet.title,
+        description: searchItem.snippet.description,
+        thumbnail: {
+          url: searchItem.snippet.thumbnails.high.url,
+          width: searchItem.snippet.thumbnails.high.width,
+          height: searchItem.snippet.thumbnails.high.height,
+        },
+        publishedAt: searchItem.snippet.publishedAt,
+        viewCount,
+        url: `https://www.youtube.com/watch?v=${searchItem.id.videoId}`,
+        duration,
+        relativeTime: getRelativeTime(searchItem.snippet.publishedAt),
+      };
+    })
+    .filter(video => video.duration && !isShort(video.duration)); // Filter out shorts
+
+  // Return only the requested number of regular videos
+  return allVideos.slice(0, maxResults);
 }
 
 // Fetch both channel stats and latest videos in one call (for efficiency)

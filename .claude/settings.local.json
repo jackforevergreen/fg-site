@@ -11,7 +11,8 @@
       "Read(//c/Users/Mark/Documents/Forevergreen/fg-react-app/**)",
       "Bash(firebase functions:list)",
       "Bash(find:*)",
-      "Read(//c/Users/Mark/Documents/Forevergreen/**)"
+      "Read(//c/Users/Mark/Documents/Forevergreen/**)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []
