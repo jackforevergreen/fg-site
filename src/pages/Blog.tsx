@@ -1,8 +1,9 @@
-import blogData from "@/assets/blog/posts.json";
-import type { BlogPost } from "@/assets/blog/types";
+import blogData from "@/assets/post/posts.json";
+import type { BlogPost } from "@/assets/post/types";
 import Navigation from "@/components/Navigation";
 import { motion } from "framer-motion";
-import { Calendar, ExternalLink, User } from "lucide-react";
+import { Calendar, ChevronRight, User } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Blog = () => {
   const posts: BlogPost[] = blogData.posts;
@@ -98,15 +99,13 @@ const Blog = () => {
                 </p>
 
                 {/* Read More Link */}
-                <a
-                  href={post.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-colors"
+                <Link
+                  to={`/post/${post.slug}`}
+                  className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-bold transition-colors"
                 >
                   Read More
-                  <ExternalLink className="h-4 w-4" />
-                </a>
+                  <ChevronRight className="h-6 w-6 mt-1" />
+                </Link>
               </div>
             </motion.article>
           ))}
