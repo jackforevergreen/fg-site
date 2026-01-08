@@ -87,9 +87,9 @@ const BlogDetail = () => {
         <img
           src={post.imageUrl}
           alt={post.title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover scale-110 blur-sm"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/0 to-background" />
 
         {/* Category Badge */}
         {post.category && (
