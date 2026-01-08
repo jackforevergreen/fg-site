@@ -166,10 +166,10 @@ const BlogDetail = () => {
                       <p className="mb-4 leading-relaxed text-muted-foreground" {...props} />
                     ),
                     ul: ({ ...props }) => (
-                      <ul className="list-disc list-inside mb-4 space-y-2 text-muted-foreground" {...props} />
+                      <ul className="list-disc list-outside mb-4 space-y-2 text-muted-foreground ml-6" {...props} />
                     ),
                     ol: ({ ...props }) => (
-                      <ol className="list-decimal list-inside mb-4 space-y-2 text-muted-foreground" {...props} />
+                      <ol className="list-decimal list-outside mb-4 space-y-2 text-muted-foreground ml-6" {...props} />
                     ),
                     blockquote: ({ ...props }) => (
                       <blockquote className="border-l-4 border-primary pl-4 italic my-4 text-muted-foreground" {...props} />
@@ -181,7 +181,7 @@ const BlogDetail = () => {
                         <code className="block bg-muted p-4 rounded-lg overflow-x-auto text-sm font-mono my-4" {...props} />
                       ),
                     img: ({ ...props }) => (
-                      <img className="rounded-lg my-6 w-full" {...props} />
+                      <img className="rounded-lg my-6 w-full max-w-md mx-auto" {...props} />
                     ),
                     a: ({ ...props }) => (
                       <a className="text-primary hover:underline" {...props} />
