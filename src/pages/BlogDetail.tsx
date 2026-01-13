@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import Navigation from "@/components/Navigation";
-import { motion } from "framer-motion";
-import { ArrowLeft, Calendar, User, Clock } from "lucide-react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
-import rehypeSanitize from "rehype-sanitize";
 import blogData from "@/assets/post/posts.json";
 import type { BlogPost } from "@/assets/post/types";
+import Navigation from "@/components/Navigation";
 import { calculateReadTime } from "@/lib/blogUtils";
+import { motion } from "framer-motion";
+import { ArrowLeft, Calendar, Clock, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
+import remarkGfm from "remark-gfm";
 
 const BlogDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -37,13 +37,19 @@ const BlogDetail = () => {
       if (response.ok) {
         const contentType = response.headers.get("content-type");
         // Check if it's actually markdown/text, not HTML
-        if (contentType && (contentType.includes("text/plain") || contentType.includes("text/markdown"))) {
+        if (
+          contentType &&
+          (contentType.includes("text/plain") ||
+            contentType.includes("text/markdown"))
+        ) {
           const text = await response.text();
           setMarkdown(text);
           setReadTime(calculateReadTime(text));
         } else {
           // Got HTML or wrong content type - no markdown file exists
-          console.log("Content file not found or wrong type, using placeholder");
+          console.log(
+            "Content file not found or wrong type, using placeholder"
+          );
           setMarkdown("");
         }
       } else {
@@ -102,7 +108,6 @@ const BlogDetail = () => {
       {/* Content Container */}
       <div className="container mx-auto px-4 -mt-32 relative z-10">
         <div className="max-w-4xl mx-auto">
-
           {/* Article Header */}
           <motion.article
             initial={{ opacity: 0, y: 20 }}
@@ -110,17 +115,16 @@ const BlogDetail = () => {
             transition={{ duration: 0.6 }}
             className="bg-card rounded-2xl shadow-lg py-4 px-8 md:px-12"
           >
-
-          {/* Back Button */}
-          <Link to="/post">
-            <motion.button
-              whileHover={{ x: -5 }}
-              className="mb-4 flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-            >
-              <ArrowLeft className="h-6 w-6 mt-1" />
-              Back to Blog
-            </motion.button>
-          </Link>
+            {/* Back Button */}
+            <Link to="/post">
+              <motion.button
+                whileHover={{ x: -5 }}
+                className="mb-4 flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+              >
+                <ArrowLeft className="h-6 w-6 mt-1" />
+                Back to Blog
+              </motion.button>
+            </Link>
 
             {/* Title */}
             <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground leading-tight">
@@ -154,38 +158,82 @@ const BlogDetail = () => {
                   components={{
                     // Custom component styling
                     h1: ({ ...props }) => (
-                      <h1 className="text-3xl font-bold mt-8 mb-4 text-foreground" {...props} />
+                      <h1
+                        className="text-3xl font-bold mt-8 mb-4 text-foreground"
+                        {...props}
+                      />
                     ),
                     h2: ({ ...props }) => (
-                      <h2 className="text-2xl font-bold mt-6 mb-3 text-foreground" {...props} />
+                      <h2
+                        className="text-2xl font-bold mt-6 mb-3 text-foreground"
+                        {...props}
+                      />
                     ),
                     h3: ({ ...props }) => (
-                      <h3 className="text-xl font-bold mt-4 mb-2 text-foreground" {...props} />
+                      <h3
+                        className="text-xl font-bold mt-4 mb-2 text-foreground"
+                        {...props}
+                      />
                     ),
                     p: ({ ...props }) => (
-                      <p className="mb-4 leading-relaxed text-muted-foreground" {...props} />
+                      <p
+                        className="mb-4 leading-relaxed text-muted-foreground"
+                        {...props}
+                      />
                     ),
                     ul: ({ ...props }) => (
-                      <ul className="list-disc list-outside mb-4 space-y-2 text-muted-foreground ml-6" {...props} />
+                      <ul
+                        className="list-disc list-outside mb-4 space-y-2 text-muted-foreground ml-6"
+                        {...props}
+                      />
                     ),
                     ol: ({ ...props }) => (
-                      <ol className="list-decimal list-outside mb-4 space-y-2 text-muted-foreground ml-6" {...props} />
+                      <ol
+                        className="list-decimal list-outside mb-4 space-y-2 text-muted-foreground ml-6"
+                        {...props}
+                      />
                     ),
                     blockquote: ({ ...props }) => (
-                      <blockquote className="border-l-4 border-primary pl-4 italic my-4 text-muted-foreground" {...props} />
+                      <blockquote
+                        className="border-l-4 border-primary pl-4 italic my-4 text-muted-foreground"
+                        {...props}
+                      />
                     ),
                     code: ({ inline, ...props }: any) =>
                       inline ? (
-                        <code className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono" {...props} />
+                        <code
+                          className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono"
+                          {...props}
+                        />
                       ) : (
-                        <code className="block bg-muted p-4 rounded-lg overflow-x-auto text-sm font-mono my-4" {...props} />
+                        <code
+                          className="block bg-muted p-4 rounded-lg overflow-x-auto text-sm font-mono my-4"
+                          {...props}
+                        />
                       ),
                     img: ({ ...props }) => (
-                      <img className="rounded-lg my-6 w-full max-w-md mx-auto" {...props} />
+                      <img
+                        className="rounded-lg my-6 w-full max-w-md mx-auto"
+                        {...props}
+                      />
                     ),
                     a: ({ ...props }) => (
                       <a className="text-primary hover:underline" {...props} />
                     ),
+                    div: ({ className, children, ...props }: any) => {
+                      if (className === "image-text-row") {
+                        return (
+                          <div className="flex flex-col md:flex-row gap-8 items-center my-8">
+                            {children}
+                          </div>
+                        );
+                      }
+                      return (
+                        <div className={className} {...props}>
+                          {children}
+                        </div>
+                      );
+                    },
                   }}
                 >
                   {markdown}
@@ -199,7 +247,8 @@ const BlogDetail = () => {
                 </p>
                 <div className="bg-muted/30 rounded-xl p-6 text-center">
                   <p className="text-muted-foreground">
-                    Full article content coming soon! Check back later for the complete story.
+                    Full article content coming soon! Check back later for the
+                    complete story.
                   </p>
                   <a
                     href={post.link}
@@ -216,7 +265,9 @@ const BlogDetail = () => {
 
           {/* Related Posts Section */}
           <div className="mt-16 mb-32">
-            <h2 className="text-2xl font-bold mb-8 text-foreground">Related Articles</h2>
+            <h2 className="text-2xl font-bold mb-8 text-foreground">
+              Related Articles
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {blogData.posts
                 .filter((p) => p.id !== post.id && p.category === post.category)

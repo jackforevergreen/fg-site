@@ -271,11 +271,11 @@ const Projects = () => {
                 </div>
 
                 {/* Right: Image */}
-                <div className="rounded-xl overflow-hidden shadow-lg group cursor-pointer">
+                <div className="rounded-xl overflow-hidden shadow-lg group cursor-pointer aspect-square">
                   <img
                     src={project.image}
                     alt={project.name}
-                    className="w-full h-full object-cover min-h-[400px] transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 </div>
               </div>
@@ -342,14 +342,16 @@ const Projects = () => {
 
                 {/* Action Buttons */}
                 <div className="flex gap-4">
-                  <button 
+                  <button
                     onClick={() => navigate("/carboncredits")}
-                    className="px-8 py-3 bg-green-700 text-white rounded-full hover:bg-green-800 transition-colors duration-300 font-medium">
+                    className="px-8 py-3 bg-green-700 text-white rounded-full hover:bg-green-800 transition-colors duration-300 font-medium"
+                  >
                     Buy Now
                   </button>
-                  <button 
+                  <button
                     onClick={() => navigate("/learn")}
-                    className="px-8 py-3 border-2 border-green-700 text-green-700 rounded-full hover:bg-green-700 hover:text-white transition-colors duration-300 font-medium">
+                    className="px-8 py-3 border-2 border-green-700 text-green-700 rounded-full hover:bg-green-700 hover:text-white transition-colors duration-300 font-medium"
+                  >
                     Read More
                   </button>
                 </div>
