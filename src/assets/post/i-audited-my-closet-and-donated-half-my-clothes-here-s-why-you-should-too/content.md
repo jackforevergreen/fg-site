@@ -4,6 +4,8 @@ Did you know the average American owns 136 pieces of clothing but only wears 20%
 
 And it's not just an individual problem—it's a global crisis. Since 2000, clothing production has doubled, but we wear our clothes less than ever. The fashion industry is now the second-largest polluter on the planet—right behind oil.
 
+![graph](/post/i-audited-my-closet-and-donated-half-my-clothes-here-s-why-you-should-too/iac1.png)
+
 > *Source: UPenn Environmental Innovation Initiative*
 
 That's why I decided to audit my closet, take inventory of what I actually wear, and donate the rest. This simple step not only decluttered my space but also helped break the cycle of overconsumption.
@@ -29,6 +31,8 @@ Thrifting isn't just about saving money (although that is a great perk). It's ab
 ## My Closet Audit: What I Found
 
 When I decided to audit my closet, I was shocked at how much I had accumulated.
+
+![graph](/post/i-audited-my-closet-and-donated-half-my-clothes-here-s-why-you-should-too/iac2.png)
 
 **In total I had 160 pieces of clothing:**
 - 76 were thrifted
