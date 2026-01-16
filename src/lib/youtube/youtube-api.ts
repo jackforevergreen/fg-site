@@ -74,10 +74,10 @@ export function parseDurationToSeconds(duration: string): number {
   return hours * 3600 + minutes * 60 + seconds;
 }
 
-// Utility: Check if video is a YouTube Short (duration <= 60 seconds / 1 minutes)
+// Utility: Check if video is a YouTube Short (duration <= 120 seconds / 2 minutes)
 export function isShort(duration: string): boolean {
   const durationInSeconds = parseDurationToSeconds(duration);
-  return durationInSeconds > 0 && durationInSeconds <= 60;
+  return durationInSeconds > 0 && durationInSeconds <= 120;
 }
 
 // Utility: Create API error
@@ -144,47 +144,68 @@ export async function fetchLatestVideos(
   channelId: string = DEFAULT_CONFIG.channelId,
   maxResults: number = DEFAULT_CONFIG.maxResults
 ): Promise<VideoData[]> {
-  // Fetch more videos initially to ensure we have enough after filtering out shorts
-  const fetchCount = 50; // Fetch many videos to ensure we get enough regular videos after filtering
+  const allVideos: VideoData[] = [];
+  let pageToken: string | undefined = undefined;
+  const perPageLimit = 50; // YouTube API maximum per request
+  const maxPagesToFetch = 10; // Safety limit to prevent infinite loops
+  let pagesFetched = 0;
 
-  const searchUrl = `${API_BASE_URL}/search?part=snippet&channelId=${channelId}&order=date&type=video&maxResults=${fetchCount}&key=${DEFAULT_CONFIG.apiKey}`;
+  // Keep fetching pages until we have enough non-short videos
+  while (allVideos.length < maxResults && pagesFetched < maxPagesToFetch) {
+    // Build search URL with pagination token if available
+    let searchUrl = `${API_BASE_URL}/search?part=snippet&channelId=${channelId}&order=date&type=video&maxResults=${perPageLimit}&key=${DEFAULT_CONFIG.apiKey}`;
+    if (pageToken) {
+      searchUrl += `&pageToken=${pageToken}`;
+    }
 
-  const searchResponse = await apiRequest<YouTubeVideoSearchResponse>(searchUrl);
+    const searchResponse = await apiRequest<YouTubeVideoSearchResponse>(searchUrl);
 
-  if (!searchResponse.items || searchResponse.items.length === 0) {
-    return [];
+    if (!searchResponse.items || searchResponse.items.length === 0) {
+      break; // No more videos available
+    }
+
+    // Get video IDs for detailed statistics
+    const videoIds = searchResponse.items.map(item => item.id.videoId).join(',');
+    const detailsUrl = `${API_BASE_URL}/videos?part=statistics,snippet,contentDetails&id=${videoIds}&key=${DEFAULT_CONFIG.apiKey}`;
+
+    const detailsResponse = await apiRequest<YouTubeVideoDetailsResponse>(detailsUrl);
+
+    // Combine search results with detailed statistics and filter out shorts
+    const pageVideos = searchResponse.items
+      .map((searchItem) => {
+        const detailItem = detailsResponse.items.find(detail => detail.id === searchItem.id.videoId);
+        const viewCount = detailItem ? parseInt(detailItem.statistics.viewCount, 10) : 0;
+        const duration = detailItem?.contentDetails?.duration || '';
+
+        return {
+          id: searchItem.id.videoId,
+          title: searchItem.snippet.title,
+          description: searchItem.snippet.description,
+          thumbnail: {
+            url: searchItem.snippet.thumbnails.high.url,
+            width: searchItem.snippet.thumbnails.high.width,
+            height: searchItem.snippet.thumbnails.high.height,
+          },
+          publishedAt: searchItem.snippet.publishedAt,
+          viewCount,
+          url: `https://www.youtube.com/watch?v=${searchItem.id.videoId}`,
+          duration,
+          relativeTime: getRelativeTime(searchItem.snippet.publishedAt),
+        };
+      })
+      .filter(video => video.duration && !isShort(video.duration)); // Filter out shorts
+
+    allVideos.push(...pageVideos);
+
+    // Check if there's a next page
+    pageToken = searchResponse.nextPageToken;
+    pagesFetched++;
+
+    // If no next page token, we've reached the end
+    if (!pageToken) {
+      break;
+    }
   }
-
-  // Get video IDs for detailed statistics
-  const videoIds = searchResponse.items.map(item => item.id.videoId).join(',');
-  const detailsUrl = `${API_BASE_URL}/videos?part=statistics,snippet,contentDetails&id=${videoIds}&key=${DEFAULT_CONFIG.apiKey}`;
-
-  const detailsResponse = await apiRequest<YouTubeVideoDetailsResponse>(detailsUrl);
-
-  // Combine search results with detailed statistics and filter out shorts
-  const allVideos = searchResponse.items
-    .map((searchItem) => {
-      const detailItem = detailsResponse.items.find(detail => detail.id === searchItem.id.videoId);
-      const viewCount = detailItem ? parseInt(detailItem.statistics.viewCount, 10) : 0;
-      const duration = detailItem?.contentDetails?.duration || '';
-
-      return {
-        id: searchItem.id.videoId,
-        title: searchItem.snippet.title,
-        description: searchItem.snippet.description,
-        thumbnail: {
-          url: searchItem.snippet.thumbnails.high.url,
-          width: searchItem.snippet.thumbnails.high.width,
-          height: searchItem.snippet.thumbnails.high.height,
-        },
-        publishedAt: searchItem.snippet.publishedAt,
-        viewCount,
-        url: `https://www.youtube.com/watch?v=${searchItem.id.videoId}`,
-        duration,
-        relativeTime: getRelativeTime(searchItem.snippet.publishedAt),
-      };
-    })
-    .filter(video => video.duration && !isShort(video.duration)); // Filter out shorts
 
   // Return only the requested number of regular videos
   return allVideos.slice(0, maxResults);
