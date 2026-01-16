@@ -16,6 +16,7 @@ import Courses from "./pages/Courses";
 import Faq from "./pages/Faq";
 import Flights from "./pages/Flights";
 import Index from "./pages/Index";
+import Learn from "./pages/Learn";
 import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Profile from "./pages/Profile";
@@ -58,6 +59,7 @@ const App = () => (
               <Route path="/faq" element={<Faq />} />
               <Route path="/methodology" element={<Methodology />} />
               <Route path="/users" element={<Users />} />
+              <Route path="/learn" element={<Learn />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
