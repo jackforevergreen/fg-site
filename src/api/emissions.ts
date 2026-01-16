@@ -1,6 +1,6 @@
+import { auth, db } from "@/lib/firebase";
 import { CommunityEmissionsData, EmissionsDocument } from "@/types/emissions";
 import dayjs from "dayjs";
-import { auth, db } from "@/lib/firebase";
 import {
   collection,
   doc,
@@ -99,6 +99,7 @@ export const fetchCommunityEmissionsData =
         return {
           emissions_calculated: data.emissions_calculated || 0,
           emissions_offset: data.emissions_offset || 0,
+          organic_reductions: data.organic_reductions || 0,
           last_updated: data.last_updated
             ? data.last_updated.toDate()
             : new Date(),

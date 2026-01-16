@@ -6,7 +6,7 @@ In this blog, we will explain the mission and vision behind Forevergreen. Our pl
 
 At the core of Forevergreen we hope to empower individuals to understand and reduce their carbon footprint. Climate change is a global issue and figuring out how to make a difference especially as one person can be daunting and discouraging. Forevergreen aims to make the process simple with our easy to use and understand methodology. First we calculate your carbon emissions with our easy to use carbon calculator. This takes only a few minutes and asks questions about your transportation habits, diet, and energy use.
 
-![Forevergreen App Screenshots](./fgphoto.png)
+![Forevergreen App Screenshots](/post/what-is-forevergreen/fgphoto.png)
 
 The carbon calculator spits out a quantified number of emissions for the month and year. This gives you an idea of your environmental impact and helps you set measurable targets. We built the platform on a monthly model, where you take this survey on the first of every month so you can track your progress over time and see real reductions in your carbon footprint. There are a few ways you can choose to reduce your footprint, the first and free version is to make habitual changes that will reduce your monthly emissions.
 

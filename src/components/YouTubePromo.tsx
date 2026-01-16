@@ -11,19 +11,19 @@ import { formatNumber } from "@/lib/youtube/youtube-api";
 // Fallback video data for when API is not available or loading
 const fallbackVideos = [
   {
-    id: "dQw4w9WgXcQ",
-    title: "Latest Forevergreen Video",
-    meta: "Loading...",
+    id: "lk0dazA7emY",
+    title: "How the Soviets Destroyed an Entire Sea",
+    meta: "",
   },
   {
-    id: "dQw4w9WgXcQ",
-    title: "Environmental Update",
-    meta: "Loading...",
+    id: "d71zmpEng28",
+    title: "How China Is Turning Coral Reefs Into Military Bases",
+    meta: "",
   },
   {
-    id: "dQw4w9WgXcQ",
-    title: "Sustainability Tips",
-    meta: "Loading...",
+    id: "YjIRg0Pt-PY",
+    title: "Why Haven’t Monkeys Made It Everywhere?",
+    meta: "",
   },
 ];
 
@@ -45,6 +45,9 @@ export default function YouTubePromo() {
   // Choose middle as hero, sides as supporting (ensure we have at least 3 videos)
   const videosToShow = videos.length >= 3 ? videos.slice(0, 3) : [...videos, ...fallbackVideos].slice(0, 3);
   const [left, center, right] = [videosToShow[0], videosToShow[2], videosToShow[1]];
+
+  // Show skeletons during loading to prevent flickering
+  const showSkeletons = isLoading;
 
   // Dynamic subscriber and view counts
   const subscriberCount = `${formattedSubscriberCount} subscribers`;
@@ -103,7 +106,7 @@ export default function YouTubePromo() {
               transition={{ duration: 0.55 }}
               className="md:mt-10"
             >
-              {isLoading && latestVideos.length === 0 ? (
+              {showSkeletons ? (
                 <VideoCardSkeleton />
               ) : (
                 <motion.div
@@ -125,7 +128,7 @@ export default function YouTubePromo() {
               transition={{ duration: 0.6, delay: 0.05 }}
               className="md:mt-0"
             >
-              {isLoading && latestVideos.length === 0 ? (
+              {showSkeletons ? (
                 <VideoCardSkeleton featured />
               ) : (
                 <FeaturedVideoCard v={center} />
@@ -138,7 +141,7 @@ export default function YouTubePromo() {
               transition={{ duration: 0.55 }}
               className="md:mt-10"
             >
-              {isLoading && latestVideos.length === 0 ? (
+              {showSkeletons ? (
                 <VideoCardSkeleton />
               ) : (
                 <motion.div
@@ -304,9 +307,17 @@ function FeaturedVideoCard({ v }: { v: any }) {
           <h3 className="font-semibold text-lg md:text-xl text-foreground line-clamp-2 group-hover:text-primary transition-colors duration-300">
             {v.title}
           </h3>
-          <div className="mt-1.5 text-sm md:text-base text-muted-foreground">
-            {v.meta || `${formatNumber(v.viewCount || 0).formatted} views • ${v.relativeTime || 'Recently'}`}
-          </div>
+          {(v.meta || v.viewCount || v.relativeTime) && (
+            <div className="mt-1.5 text-sm md:text-base text-muted-foreground">
+              {v.meta || (
+                <>
+                  {v.viewCount && `${formatNumber(v.viewCount).formatted} views`}
+                  {v.viewCount && v.relativeTime && ' • '}
+                  {v.relativeTime}
+                </>
+              )}
+            </div>
+          )}
         </div>
       </a>
     </Card>
@@ -349,9 +360,17 @@ function TiltedVideoCard({
           <h3 className="font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors duration-300">
             {v.title}
           </h3>
-          <div className="mt-1 text-sm text-muted-foreground">
-            {v.meta || `${formatNumber(v.viewCount || 0).formatted} views • ${v.relativeTime || 'Recently'}`}
-          </div>
+          {(v.meta || v.viewCount || v.relativeTime) && (
+            <div className="mt-1 text-sm text-muted-foreground">
+              {v.meta || (
+                <>
+                  {v.viewCount && `${formatNumber(v.viewCount).formatted} views`}
+                  {v.viewCount && v.relativeTime && ' • '}
+                  {v.relativeTime}
+                </>
+              )}
+            </div>
+          )}
         </div>
       </a>
     </Card>

@@ -62,6 +62,7 @@ export interface EmissionsDocument {
 export interface CommunityEmissionsData {
   emissions_calculated: number;
   emissions_offset: number;
+  organic_reductions?: number;  // ← ADD THIS LINE
   last_updated: Date;
 }
 

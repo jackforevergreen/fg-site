@@ -2,7 +2,7 @@
 
 In 2023 there were 28 extreme weather events, costing the US over 92.8 billion dollars. These weather events destroyed homes and cities, and killed 492 innocent citizens—the 8th most disaster-related fatalities for the contiguous U.S. since 1980. [2] Global temperatures have risen 1.1 degrees celsius from 1901-2020. This has already impacted our planet and led to record-breaking heat waves on land and in the ocean, drenching rains, severe floods, multiyear-long droughts, extreme wildfires, and widespread flooding during hurricanes are all becoming more frequent and more intense events. [3] This is mostly due to the industrial revolution and increased burning of fossil fuels, deforestation, and agricultural practices. In this blog we will explore how greenhouse gas emissions are raising global temperatures.
 
-![greenhouse-effect](./greenhouse.png)
+![greenhouse-effect](/post/understanding-the-impact-global-temperature-rise-and-its-effects-on-the-planet/greenhouse.png)
 
 ## The Greenhouse Effect
 
@@ -14,7 +14,7 @@ Greenhouse gases trap energy from the sun in the earths atmosphere casing an inc
 
 Since the industrial revolution emissions have been on an clear upwards trend. the concentration of carbon dioxide in the atmosphere rose from 275 parts per million (ppm) in 1750 to 415 ppm globally now. [4] A major contributor to the drastic increase has been the burning of fossil fuels, where global carbon emissions have significantly increased since 1900. Since 1970, CO2 emissions have increased by about 90%, with emissions from fossil fuel combustion and industrial processes contributing about 78% of the total greenhouse gas emissions increase from 1970 to 2011. [5]
 
-![carbon-dioxide-concentration](./c02.png)
+![carbon-dioxide-concentration](/post/understanding-the-impact-global-temperature-rise-and-its-effects-on-the-planet/c02.png)
 
 ## Evidence of Temperature Rise
 
