@@ -13,7 +13,7 @@ const navigationItems = [
   { name: "Carbon Calculator", href: "/carbon-calculator" },
   { name: "Carbon Credits", href: "/carboncredits" },
   { name: "Course", href: "/course" },
-  { name: "Blog", href: "/post" },
+  { name: "Learn", href: "/learn" },
   { name: "About", href: "/about" },
   { name: "Projects", href: "/projects" },
 ];
