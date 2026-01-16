@@ -50,7 +50,7 @@ The battle against climate change is a global challenge that requires a global r
 
 ---
 
-[Click here](https://forevergreen.earth/carbon-calc) to find out your carbon footprint...
+[Click here](https://forevergreen.earth/carbon-calculator) to find out your carbon footprint...
 
 Founded in December 2023, Forevergreen is a project determined to help the average American reduce their impact on the earth. We hope to help individuals take part in fighting climate change by offsetting their carbon footprint.
 

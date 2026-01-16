@@ -1,7 +1,3 @@
-# What is Carbon Footprinting?
-
-**Updated:** May 23, 2024
-
 ![What is Carbon Footprinting?](/post/what-is-carbon-footprinting/head.avif)
 
 A carbon footprint is the total amount of carbon that an individual, company, entity, or activity emits into the atmosphere. Carbon footprinting has been used to understand the full environmental impacts over the lifecycle of a product or activity and can help aid decision-making for consumers or businesses. It is a useful tool when aiming to reduce impacts on the environment.
@@ -42,7 +38,7 @@ Scope 3 is very hard to calculate and many times is left out of carbon accountin
 
 ## Measuring Carbon Footprints
 
-There are a variety of different methodologies for measuring carbon footprints that exist. It is important to use the most accurate one available for the entity you are trying to measure. This includes using location-based and market-based methodologies. For businesses, it is recommended to use the widely recognized [Greenhouse Gas Protocol carbon reporting and accounting standards](https://ghgprotocol.org/standards) (GHGP). These are comprehensive accounting standards that have been developed over the past 2 decades. For individuals there are many online carbon footprint calculators, [Forevergreen](https://www.forevergreen.earth/carbon-calc) has a simple and accurate calculator that can be completed in just a few minutes. For those wanting a more accurate and in-depth analysis, the EPA has an extensive [Household Carbon Footprint Calculator](https://www.epa.gov/ghgemissions/household-carbon-footprint-calculator) that can be done [online](https://www3.epa.gov/carbon-footprint-calculator/) or in an [Excel spreadsheet](https://www3.epa.gov/carbon-footprint-calculator/#:~:text=as%20a%20spreadsheet.-,Calculator%20in%20Excel,-EPA%20Home).
+There are a variety of different methodologies for measuring carbon footprints that exist. It is important to use the most accurate one available for the entity you are trying to measure. This includes using location-based and market-based methodologies. For businesses, it is recommended to use the widely recognized [Greenhouse Gas Protocol carbon reporting and accounting standards](https://ghgprotocol.org/standards) (GHGP). These are comprehensive accounting standards that have been developed over the past 2 decades. For individuals there are many online carbon footprint calculators, [Forevergreen](https://www.forevergreen.earth/carbon-calculator) has a simple and accurate calculator that can be completed in just a few minutes. For those wanting a more accurate and in-depth analysis, the EPA has an extensive [Household Carbon Footprint Calculator](https://www.epa.gov/ghgemissions/household-carbon-footprint-calculator) that can be done [online](https://www3.epa.gov/carbon-footprint-calculator/) or in an [Excel spreadsheet](https://www3.epa.gov/carbon-footprint-calculator/#:~:text=as%20a%20spreadsheet.-,Calculator%20in%20Excel,-EPA%20Home).
 
 ---
 

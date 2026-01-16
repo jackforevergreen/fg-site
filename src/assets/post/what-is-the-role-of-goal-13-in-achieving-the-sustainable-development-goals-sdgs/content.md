@@ -2,13 +2,13 @@
 
 In 2015 the UN released its 2030 Agenda for Sustainable Development and with it 17 SDGs (Sustainable Development Goals). These goals shared a blueprint for peace and prosperity for people and the planet, now and into the future. [1] The survival of our societies and our shared planet depends on a more sustainable world. These goals bring some of the most important issues to a global scale such as poverty, human rights, education, and environmental action. In this blog we will focus on SDG Goal #13 Climate Action.
 
-![sustainable-development-goals](./sdg.avif)
+![sustainable-development-goals](/post/what-is-the-role-of-goal-13-in-achieving-the-sustainable-development-goals-sdgs/sdg.avif)
 
 ## Deep Dive into Goal 13: Climate Action
 
 It is clear that climate action needs serious attention and efforts. Our global temperatures are up 1.1 degrees celsius since the industrial revolution and this is causing the climate crisis. SDG goal 13 aims to mitigate our impact on the environment. Climate change will impact every single person on the planet, and we are drastically underprepared to meet 2030 targets. Goal 13 has a few distinct indicators to measure our global success in reducing our impacts. [2]
 
-![climate-action-goal](./13.avif)
+![climate-action-goal](/post/what-is-the-role-of-goal-13-in-achieving-the-sustainable-development-goals-sdgs/13.avif)
 
 - **13.1** Strengthen resilience and adaptive capacity to climate-related hazards and natural disasters in all countries
 - **13.2** Integrate climate change measures into national policies, strategies and planning

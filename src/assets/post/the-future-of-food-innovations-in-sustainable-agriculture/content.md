@@ -69,6 +69,6 @@ The innovations outlined above represent a beacon of hope, guiding us toward a m
 Remember, every small step counts.
 Together, we can create a brighter future for our planet. 🌍🌱
 
-[Click here](https://forevergreen.earth/carbon-calc) to find out your carbon footprint...
+[Click here](https://forevergreen.earth/carbon-calculator) to find out your carbon footprint...
 
 Founded in December 2023, Forevergreen is a project determined to help the average American reduce their impact on the earth. We hope to help individuals take part in fighting climate change by offsetting their carbon footprint.

@@ -68,6 +68,6 @@ The journey of GMOs is a testament to human innovation and our quest to create a
 
 ---
 
-[Click here](https://forevergreen.earth/carbon-calc) to find out your carbon footprint...
+[Click here](https://forevergreen.earth/carbon-calculator) to find out your carbon footprint...
 
 Founded in December 2023, Forevergreen is a project determined to help the average American reduce their impact on the earth. We hope to help individuals take part in fighting climate change by offsetting their carbon footprint.

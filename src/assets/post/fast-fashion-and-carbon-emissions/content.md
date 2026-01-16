@@ -4,7 +4,7 @@
 
 Did you know the fashion industry makes up 10% of global carbon emissions? Annually it contributes over 1.2 billion tons of carbon into the atmosphere. [1] "Fast Fashion" is a term popularized in the early 1990s when Zara was able to fulfill clothing orders in less than 16 weeks. Since then the desire to get trendy in style clothing has risen exponentially. With the rise of popularity in cheap and stylish clothing environmental impact has become an increasing concern among shoppers. Today we will dive into the environmental and social costs of fast fashion and how you can avoid contributing to them.
 
-![fast-fashion-waste](./fast-fashion.avif)
+![fast-fashion-waste](/post/fast-fashion-and-carbon-emissions/fast-fashion.avif)
 
 > *Source: Green Matters*
 
@@ -16,7 +16,7 @@ As consumerism grows and it becomes easier and quicker to purchase from online r
 
 [Carbon Footprinting](https://www.forevergreen.earth/post/what-is-carbon-footprinting) is a valuable tool to understand the full environmental impact of a product's life cycle. Fast fashion has a notoriously high impact as it has quick production, quick shipping, and quickly ends up in landfills. Americans buy an average of 64 items of clothing per year, with jeans' carbon footprint being around 33 kg of CO2 and the average t-shirt at around 15 kg, your carbon footprint from clothes could easily be 1 ton of CO2. [4] 1 ton of CO2 is about the same as driving 2,500 miles or flying from Boston to London and back. It is important to be mindful of your fashion-related emissions as many of them can be avoided by simply not constantly buying new clothes.
 
-![carbon-emissions-chart](./fast-chart.avif)
+![carbon-emissions-chart](/post/fast-fashion-and-carbon-emissions/fast-chart.avif)
 
 > *Source: Climate Feedback*
 
