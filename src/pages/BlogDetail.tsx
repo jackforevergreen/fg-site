@@ -33,7 +33,7 @@ const BlogDetail = () => {
   // Load markdown content
   const loadMarkdownContent = async (postSlug: string) => {
     try {
-      const response = await fetch(`/src/assets/post/${postSlug}/content.md`);
+      const response = await fetch(`/post/${postSlug}/content.md`);
       if (response.ok) {
         const contentType = response.headers.get("content-type");
         // Check if it's actually markdown/text, not HTML
