@@ -41,16 +41,8 @@
   to = "/carboncredits#projects"
   status = 301
 
-# Legacy blog URLs → External Wix blog
-[[redirects]]
-  from = "/post/*"
-  to = "https://fgsite.wix.com/blog/:splat"
-  status = 301
-
-[[redirects]]
-  from = "/blog/*"
-  to = "https://fgsite.wix.com/blog/:splat"
-  status = 301
+# Blog routes are now handled internally by the React app
+# (Legacy Wix redirects removed)
 
 # Route naming redirects (old names → new canonical names)
 [[redirects]]
