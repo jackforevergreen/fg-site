@@ -4,26 +4,24 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Play, Users, Youtube } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useYouTube, useLatestVideos, useSubscriberCount } from "@/lib/youtube/youtube-context";
-import { formatNumber } from "@/lib/youtube/youtube-api";
+import { formatNumber, getRelativeTime } from "@/lib/youtube/youtube-api";
 
 // Fallback video data for when API is not available or loading
+// Note: These have no publishedAt, so no metadata will be shown for them
 const fallbackVideos = [
   {
     id: "lk0dazA7emY",
     title: "How the Soviets Destroyed an Entire Sea",
-    meta: "",
   },
   {
     id: "d71zmpEng28",
     title: "How China Is Turning Coral Reefs Into Military Bases",
-    meta: "",
   },
   {
     id: "YjIRg0Pt-PY",
-    title: "Why Haven’t Monkeys Made It Everywhere?",
-    meta: "",
+    title: "Why Haven't Monkeys Made It Everywhere?",
   },
 ];
 
@@ -39,11 +37,26 @@ export default function YouTubePromo() {
   const latestVideos = useLatestVideos();
   const isLoading = data.loading;
 
-  // Use dynamic videos if available, otherwise fallback
-  const videos = latestVideos.length > 0 ? latestVideos : fallbackVideos;
+  // Process videos: sort by date (most recent first) and calculate relativeTime dynamically
+  const processedVideos = useMemo(() => {
+    if (latestVideos.length === 0) return fallbackVideos;
+
+    // Sort by publishedAt date (most recent first) and recalculate relativeTime
+    return [...latestVideos]
+      .sort((a, b) => {
+        const dateA = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+        const dateB = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+        return dateB - dateA; // Most recent first
+      })
+      .map(video => ({
+        ...video,
+        // Recalculate relativeTime dynamically from publishedAt
+        relativeTime: video.publishedAt ? getRelativeTime(video.publishedAt) : undefined,
+      }));
+  }, [latestVideos]);
 
   // Choose middle as hero, sides as supporting (ensure we have at least 3 videos)
-  const videosToShow = videos.length >= 3 ? videos.slice(0, 3) : [...videos, ...fallbackVideos].slice(0, 3);
+  const videosToShow = processedVideos.length >= 3 ? processedVideos.slice(0, 3) : [...processedVideos, ...fallbackVideos].slice(0, 3);
   const [left, center, right] = [videosToShow[0], videosToShow[2], videosToShow[1]];
 
   // Show skeletons during loading to prevent flickering

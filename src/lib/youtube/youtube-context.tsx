@@ -136,48 +136,47 @@ const FALLBACK_DATA = {
   lastUpdated: Date.now(),
 };
 
+// Fallback videos - relativeTime is NOT stored here, it should be calculated dynamically
+// These match the fallback videos in YouTubePromo.tsx
 const FALLBACK_VIDEOS: VideoData[] = [
   {
-    id: '9JIAtBjy0Z0',
-    title: 'The Immortal Jellyfish Explained',
-    description: 'Discover the secrets of the immortal jellyfish and how it defies aging.',
+    id: 'lk0dazA7emY',
+    title: 'How the Soviets Destroyed an Entire Sea',
+    description: '',
     thumbnail: {
-      url: 'https://i.ytimg.com/vi/9JIAtBjy0Z0/hqdefault.jpg',
+      url: 'https://i.ytimg.com/vi/lk0dazA7emY/hqdefault.jpg',
       width: 480,
       height: 360,
     },
-    publishedAt: '2024-12-01T10:00:00Z',
-    viewCount: 2100,
-    url: 'https://www.youtube.com/watch?v=9JIAtBjy0Z0',
-    relativeTime: '2 weeks ago',
+    publishedAt: '',
+    viewCount: 0,
+    url: 'https://www.youtube.com/watch?v=lk0dazA7emY',
   },
   {
-    id: '2a6BRN0TXu0',
-    title: 'Top 5 Smartest Animals and How We Measure Intelligence',
-    description: 'Exploring animal intelligence and the fascinating ways we measure it.',
+    id: 'd71zmpEng28',
+    title: 'How China Is Turning Coral Reefs Into Military Bases',
+    description: '',
     thumbnail: {
-      url: 'https://i.ytimg.com/vi/2a6BRN0TXu0/hqdefault.jpg',
+      url: 'https://i.ytimg.com/vi/d71zmpEng28/hqdefault.jpg',
       width: 480,
       height: 360,
     },
-    publishedAt: '2024-11-15T14:30:00Z',
-    viewCount: 4200,
-    url: 'https://www.youtube.com/watch?v=2a6BRN0TXu0',
-    relativeTime: '1 month ago',
+    publishedAt: '',
+    viewCount: 0,
+    url: 'https://www.youtube.com/watch?v=d71zmpEng28',
   },
   {
-    id: 'uswcbDK2HeM',
-    title: 'How Bees Make Honey',
-    description: 'The incredible process of how bees create the sweet golden nectar we love.',
+    id: 'YjIRg0Pt-PY',
+    title: 'Why Haven\'t Monkeys Made It Everywhere?',
+    description: '',
     thumbnail: {
-      url: 'https://i.ytimg.com/vi/uswcbDK2HeM/hqdefault.jpg',
+      url: 'https://i.ytimg.com/vi/YjIRg0Pt-PY/hqdefault.jpg',
       width: 480,
       height: 360,
     },
-    publishedAt: '2024-10-20T09:15:00Z',
-    viewCount: 8700,
-    url: 'https://www.youtube.com/watch?v=uswcbDK2HeM',
-    relativeTime: '2 months ago',
+    publishedAt: '',
+    viewCount: 0,
+    url: 'https://www.youtube.com/watch?v=YjIRg0Pt-PY',
   },
 ];
 
