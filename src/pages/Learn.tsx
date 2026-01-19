@@ -157,7 +157,9 @@ const Learn = () => {
                 Forevergreen empowers you to make a difference every day.
               </p>
               <a
-                href="https://www.forevergreen.earth/_files/ugd/40d6d3_08fec397a6cb417d8ec0a6dc17f0f14e.pdf"
+                href="https://drive.google.com/file/d/1g45J1f1AWHsHrGquEqcFfDF6Urmwsa0W/view?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-colors"
               >
                 Read More
