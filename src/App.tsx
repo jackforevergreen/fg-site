@@ -14,6 +14,7 @@ import Certificates from "./pages/Certificates";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
 import Courses from "./pages/Courses";
 import Faq from "./pages/Faq";
+import Flightad from "./pages/flightad";
 import Flights from "./pages/Flights";
 import Index from "./pages/Index";
 import Learn from "./pages/Learn";
@@ -61,6 +62,7 @@ const App = () => (
               <Route path="/users" element={<Users />} />
               <Route path="/learn" element={<Learn />} />
               <Route path="*" element={<NotFound />} />
+              <Route path="/flightad" element={<Flightad />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
