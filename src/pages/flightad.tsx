@@ -1,3 +1,4 @@
+import flightOffset from "@/assets/flight-offset.png";
 import FGLogo from "@/assets/logo.png";
 import { motion } from "framer-motion";
 import { Award, CheckCircle2 } from "lucide-react";
@@ -150,6 +151,19 @@ const FlightOffsetLanding = () => {
         >
           Offset your flight emissions
         </motion.h1>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="flex justify-center mb-6"
+        >
+          <img
+            src={flightOffset}
+            alt="Flight offset credit"
+            className="h-24 w-24 object-contain animate-float drop-shadow-lg"
+          />
+        </motion.div>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
