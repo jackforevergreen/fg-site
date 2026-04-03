@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { Award, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 
+declare const window: Window & { gtag?: (...args: unknown[]) => void };
+
 const flightOptions = [
   {
     label: "1–8 hours | 1 Credit",
@@ -240,7 +242,15 @@ const FlightOffsetLanding = () => {
             </h3>
             <select
               value={selectedIndex}
-              onChange={(e) => setSelectedIndex(Number(e.target.value))}
+              onChange={(e) => {
+                const newIndex = Number(e.target.value);
+                setSelectedIndex(newIndex);
+                window.gtag?.("event", "hours_selected", {
+                  hours_label: flightOptions[newIndex].label,
+                  credits: flightOptions[newIndex].credits,
+                  price: flightOptions[newIndex].price,
+                });
+              }}
               className="w-full rounded-xl border-2 border-green-200 dark:border-green-800 bg-background text-foreground text-base py-3 px-4 mb-6 font-medium cursor-pointer focus:outline-none focus:border-green-500 transition-colors hover:border-green-400"
             >
               {flightOptions.map((opt, i) => (
@@ -268,6 +278,13 @@ const FlightOffsetLanding = () => {
               href={selected.link}
               target="_blank"
               rel="noreferrer"
+              onClick={() => {
+                window.gtag?.("event", "buy_clicked", {
+                  hours_label: selected.label,
+                  credits: selected.credits,
+                  price: selected.price,
+                });
+              }}
               className="block w-full text-center px-8 py-4 rounded-xl bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-bold text-lg shadow-lg shadow-green-200 transition-all duration-200 hover:-translate-y-0.5 no-underline"
             >
               Buy — ${selected.price}
