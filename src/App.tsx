@@ -29,6 +29,8 @@ import Subscriptions from "./pages/Subscriptions";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import { blogRoutes } from "./routes/blogRoutes";
 
+import DTH from "./pages/Wholesale";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -66,6 +68,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
               <Route path="/flightad" element={<Flightad />} />
               <Route path="/flightadv2" element={<Flightadv2 />} />
+              <Route path="/wholesale" element={<DTH />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
