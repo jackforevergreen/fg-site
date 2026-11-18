@@ -7,9 +7,11 @@ import { ArrowLeft, Calendar, Clock, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import rehypeRaw from "rehype-raw";
-import rehypeSanitize from "rehype-sanitize";
-import remarkGfm from "remark-gfm";
+import {
+  blogRehypePlugins,
+  blogRemarkPlugins,
+  toSafeEmbedSrc,
+} from "@/lib/safeYoutubeEmbed";
 
 const BlogDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -153,53 +155,53 @@ const BlogDetail = () => {
             {markdown ? (
               <div className="prose prose-lg prose-slate dark:prose-invert max-w-none">
                 <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[rehypeRaw, rehypeSanitize]}
+                  remarkPlugins={blogRemarkPlugins}
+                  rehypePlugins={blogRehypePlugins}
                   components={{
                     // Custom component styling
-                    h1: ({ ...props }) => (
+                    h1: ({ node, ...props }) => (
                       <h1
                         className="text-3xl font-bold mt-8 mb-4 text-foreground"
                         {...props}
                       />
                     ),
-                    h2: ({ ...props }) => (
+                    h2: ({ node, ...props }) => (
                       <h2
                         className="text-2xl font-bold mt-6 mb-3 text-foreground"
                         {...props}
                       />
                     ),
-                    h3: ({ ...props }) => (
+                    h3: ({ node, ...props }) => (
                       <h3
                         className="text-xl font-bold mt-4 mb-2 text-foreground"
                         {...props}
                       />
                     ),
-                    p: ({ ...props }) => (
+                    p: ({ node, ...props }) => (
                       <p
                         className="mb-4 leading-relaxed text-muted-foreground"
                         {...props}
                       />
                     ),
-                    ul: ({ ...props }) => (
+                    ul: ({ node, ...props }) => (
                       <ul
                         className="list-disc list-outside mb-4 space-y-2 text-muted-foreground ml-6"
                         {...props}
                       />
                     ),
-                    ol: ({ ...props }) => (
+                    ol: ({ node, ...props }) => (
                       <ol
                         className="list-decimal list-outside mb-4 space-y-2 text-muted-foreground ml-6"
                         {...props}
                       />
                     ),
-                    blockquote: ({ ...props }) => (
+                    blockquote: ({ node, ...props }) => (
                       <blockquote
                         className="border-l-4 border-primary pl-4 italic my-4 text-muted-foreground"
                         {...props}
                       />
                     ),
-                    code: ({ inline, ...props }: any) =>
+                    code: ({ node, inline, ...props }: any) =>
                       inline ? (
                         <code
                           className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono"
@@ -211,16 +213,38 @@ const BlogDetail = () => {
                           {...props}
                         />
                       ),
-                    img: ({ ...props }) => (
+                    img: ({ node, ...props }) => (
                       <img
                         className="rounded-lg my-6 w-full max-w-md mx-auto"
                         {...props}
                       />
                     ),
-                    a: ({ ...props }) => (
+                    a: ({ node, ...props }) => (
                       <a className="text-primary hover:underline" {...props} />
                     ),
-                    div: ({ className, children, ...props }: any) => {
+                    iframe: ({ src, title }: { src?: string; title?: string }) => {
+                      const safeSrc =
+                        typeof src === "string" ? toSafeEmbedSrc(src) : null;
+                      if (!safeSrc) return null;
+                      const safeTitle =
+                        typeof title === "string" && title.trim()
+                          ? title.trim().slice(0, 180)
+                          : "YouTube video";
+                      return (
+                        <div className="relative my-8 aspect-video w-full overflow-hidden rounded-lg">
+                          <iframe
+                            src={safeSrc}
+                            title={safeTitle}
+                            className="absolute inset-0 h-full w-full"
+                            loading="lazy"
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                          />
+                        </div>
+                      );
+                    },
+                    div: ({ node, className, children, ...props }: any) => {
                       if (className === "image-text-row") {
                         return (
                           <div className="flex flex-col md:flex-row gap-8 items-center my-8">

@@ -3,6 +3,16 @@
   "description": "We believe in creating a community where sustainability is accessible for everyone. We are building the future of our planet, one tree at a time.",
   "posts": [
     {
+      "id": "thescienceofphantomtrafficjams",
+      "title": "The Science of Phantom Traffic Jams",
+      "description": "A jam with no accident and no construction. How phantom traffic jams form, why they waste fuel, and what drivers can do about them.",
+      "link": "https://www.forevergreen.earth/post/the-science-of-phantom-traffic-jams",
+      "slug": "the-science-of-phantom-traffic-jams",
+      "pubDate": "2026-11-18T12:00:00.000Z",
+      "imageUrl": "/post/the-science-of-phantom-traffic-jams/thumbnail.jpg",
+      "author": "Forevergreen"
+    },
+    {
       "id": "howtosavemoneythroug",
       "title": "How To Save Money Through Sustainable Living",
       "description": "",
