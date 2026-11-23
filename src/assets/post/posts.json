@@ -3,6 +3,16 @@
   "description": "We believe in creating a community where sustainability is accessible for everyone. We are building the future of our planet, one tree at a time.",
   "posts": [
     {
+      "id": "whygreatwhitesharksfailincaptivity",
+      "title": "Why Great White Sharks Fail in Captivity",
+      "description": "One great white survived 198 days at Monterey Bay Aquarium, still the record. Here's why no aquarium can keep the ocean's most famous shark today.",
+      "link": "https://www.forevergreen.earth/post/why-great-white-sharks-fail-in-captivity",
+      "slug": "why-great-white-sharks-fail-in-captivity",
+      "pubDate": "2026-11-23T12:00:00.000Z",
+      "imageUrl": "/post/why-great-white-sharks-fail-in-captivity/thumbnail.jpg",
+      "author": "Forevergreen"
+    },
+    {
       "id": "thebloodybananaempireisstartingtocrumble",
       "title": "The Bloody Banana Empire Is Starting to Crumble",
       "description": "Around 80% of exported bananas come from just five countries. Here's how fruit companies built a banana empire — and why a fungus is undoing it.",
